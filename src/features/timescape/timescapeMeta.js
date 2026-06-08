@@ -1,30 +1,37 @@
 export const MONUMENT = {
-  name: 'Salzburg Cathedral',
-  location: 'Domplatz, Salzburg, Austria',
+  name: 'Mozart Residence',
+  location: 'Makartplatz 8, Salzburg, Austria',
 };
 
-/** Discrete timeline stops — present → past (left to right). */
+/** Discrete timeline stops — chronological (left to right). Index 0 is the default view. */
 export const TIMELINE_ERAS = [
   {
-    id: 'present',
-    year: 2024,
-    label: 'Present day',
+    id: 'original',
+    year: 1773,
+    label: 'The Mozart house',
     description:
-      'The same Baroque cathedral as before the war, plus Domplatz visitor pavilion, crypt canopy, glazed connector, kiosk, and forecourt railings.',
+      "The Mozart family's home from 1773 — a four-story Baroque corner house on Makartplatz with an austere window grid, pitched roof, and the grand Tanzmeistersaal dance hall.",
   },
   {
-    id: 'post-war',
-    year: 1945,
-    label: 'After the air raid',
+    id: 'destroyed',
+    year: 1944,
+    label: 'After the bombing',
     description:
-      'On 16 October 1944 a bomb pierced the crossing dome. The vault caved inward, burying the choir under timber and stone.',
+      'On 16 October 1944 an aerial bomb destroyed roughly two-thirds of the building. Only the lower street-front survived beneath the rubble of the upper floors.',
   },
   {
-    id: 'pre-war',
-    year: 1938,
-    label: 'Before the war',
+    id: 'office',
+    year: 1952,
+    label: 'The office block',
     description:
-      'Early Baroque cathedral by Santino Solari — twin west towers, copper crossing dome, triple portal, and Domplatz forecourt.',
+      'In 1952 a plain modern office building for Assicurazioni Generali (architect Josef Becvar) rose on the footprint — flat parapet roof and horizontal ribbon windows. It stood until 1994.',
+  },
+  {
+    id: 'restored',
+    year: 1996,
+    label: 'Reconstructed museum',
+    description:
+      'Between 1994 and 1996 the house was rebuilt to the original plans. The Mozart-Wohnhaus museum reopened in 1996, the Baroque facade and Tanzmeistersaal restored.',
   },
 ];
 

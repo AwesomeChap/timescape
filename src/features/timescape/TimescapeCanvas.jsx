@@ -1,23 +1,23 @@
 import React, { forwardRef, useEffect, useImperativeHandle, useRef } from 'react';
 import * as THREE from 'three';
 import {
-  ERA_COLORS,
+  ERA_COLOR_BUFFERS,
   ERA_POSITIONS,
   MONUMENT_BOUNDS,
   POINT_COUNT,
-  lerpEraColors,
+  lerpColorBuffers,
   lerpEraPositions,
 } from './monumentData';
 
 const VERTEX_SHADER = `
   attribute float size;
+  attribute vec3 aColor;
   varying vec3 vColor;
   varying float vLift;
-  uniform vec3 tint;
   uniform float pointScale;
 
   void main() {
-    vColor = tint;
+    vColor = aColor;
     vLift = position.y;
     vec4 mvPosition = modelViewMatrix * vec4(position, 1.0);
     gl_PointSize = size * pointScale * (340.0 / -mvPosition.z);
@@ -39,7 +39,7 @@ const FRAGMENT_SHADER = `
     float core = 1.0 - smoothstep(0.0, 0.2, dist);
     float lift = smoothstep(-1.4, 2.1, vLift);
     float shimmer = 0.04 * sin(morphMix * 12.566) * (1.0 - morphMix);
-    vec3 color = vColor * (0.52 + lift * 0.28 + core * 0.42 + shimmer);
+    vec3 color = vColor * (0.74 + lift * 0.12 + core * 0.3 + shimmer);
     gl_FragColor = vec4(color, alpha * 0.88);
   }
 `;
@@ -54,12 +54,12 @@ function createPointSizes(count) {
   return sizes;
 }
 
-/** West facade (Domplatz) faces +Z — theta 0 places camera on that axis. */
+/** Main facade (Makartplatz) faces +Z — theta 0 places camera on that axis. */
 const DEFAULT_ORBIT_THETA = 0;
 /** ~1.24 rad ≈ 18° above horizon at the look target — front elevation, not top-down. */
 const DEFAULT_ORBIT_PHI = 1.24;
-/** Ignore forecourt ground when framing so the cathedral fills the viewport vertically. */
-const FRAMING_Y_MIN = Math.max(MONUMENT_BOUNDS.min[1], -0.15);
+/** Frame the whole house including its ground floor and street base. */
+const FRAMING_Y_MIN = MONUMENT_BOUNDS.min[1];
 const FRAMING_Y_MAX = MONUMENT_BOUNDS.max[1];
 const FRAMING_HEIGHT = FRAMING_Y_MAX - FRAMING_Y_MIN;
 /** Slightly below geometric center so the silhouette sits centered, not bottom-heavy. */
@@ -117,14 +117,14 @@ const TimescapeCanvas = forwardRef(function TimescapeCanvas(
     scene.add(monumentGroup);
 
     const workingPositions = new Float32Array(ERA_POSITIONS[0]);
+    const workingColors = new Float32Array(ERA_COLOR_BUFFERS[0]);
     const geometry = new THREE.BufferGeometry();
     geometry.addAttribute('position', new THREE.BufferAttribute(workingPositions, 3));
+    geometry.addAttribute('aColor', new THREE.BufferAttribute(workingColors, 3));
     geometry.addAttribute('size', new THREE.BufferAttribute(createPointSizes(POINT_COUNT), 1));
 
-    const tint = new THREE.Vector3(...ERA_COLORS[0]);
     const material = new THREE.ShaderMaterial({
       uniforms: {
-        tint: { value: tint },
         morphMix: { value: 0 },
         pointScale: { value: 1 },
       },
@@ -245,17 +245,15 @@ const TimescapeCanvas = forwardRef(function TimescapeCanvas(
 
       if (from === to || progress >= 1) {
         workingPositions.set(ERA_POSITIONS[to]);
-        tint.set(...ERA_COLORS[to]);
+        workingColors.set(ERA_COLOR_BUFFERS[to]);
       } else {
         lerpEraPositions(from, to, progress, workingPositions);
-        const colorScratch = [0, 0, 0];
-        lerpEraColors(from, to, progress, colorScratch);
-        tint.set(...colorScratch);
+        lerpColorBuffers(from, to, progress, workingColors);
       }
 
       geometry.attributes.position.needsUpdate = true;
+      geometry.attributes.aColor.needsUpdate = true;
       material.uniforms.morphMix.value = progress;
-      material.uniforms.tint.value.copy(tint);
 
       if (autoRotate && !isDragging) {
         orbitTheta += 0.0018;

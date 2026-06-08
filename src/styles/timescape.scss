@@ -197,7 +197,7 @@ $timescape-copy-gap: calc(16 * #{$mesh});
 .timescape-timeline {
   width: 100%;
   padding: calc(2 * #{$mesh}) 0 calc(2 * #{$mesh});
-  --timeline-stop-count: 3;
+  --timeline-stop-count: 4;
   --timeline-rail-inset: calc(100% / (2 * var(--timeline-stop-count)));
   --timeline-rail-height: calc(0.5 * #{$mesh});
   --timeline-rail-muted: #3a3a3a;

@@ -1,6 +1,6 @@
 # Timescape
 
-Interactive 3D point-cloud morph of **Salzburg Cathedral** across three historical eras — a hackathon experiment.
+Interactive 3D point-cloud morph of the **Mozart-Wohnhaus** (Mozart Residence, Makartplatz 8, Salzburg) across four historical states — a hackathon experiment.
 
 ## Stack
 
@@ -48,10 +48,10 @@ Optional: add a custom domain under the site’s **Settings** → **Custom Domai
 
 ## Timeline
 
-Present → past (left to right): **2024 · 1945 · 1938**
+Chronological (left to right): **1773 original · 1944 destroyed · 1952 office block · 1996 reconstructed**
 
 - Drag to orbit, scroll to zoom
-- Click timeline dots to morph between eras
+- Click timeline dots to morph between states
 
 ## License
 
