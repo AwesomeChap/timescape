@@ -24,7 +24,27 @@ npm run build
 npm run preview
 ```
 
-Deploy the `dist/` folder to any static host (Vercel, Netlify, GitHub Pages, etc.).
+Deploy the `dist/` folder to any static host, or use [Render](#deploy-on-render) below.
+
+## Deploy on Render
+
+This repo includes a [`render.yaml`](render.yaml) blueprint for a **Static Site**.
+
+1. Push this repository to GitHub (or GitLab/Bitbucket).
+2. In the [Render dashboard](https://dashboard.render.com/), click **New** → **Blueprint**.
+3. Connect the repo and apply the blueprint. Render will create a static site with:
+   - **Build command:** `npm install && npm run build`
+   - **Publish directory:** `dist`
+4. After the first deploy finishes, open the `*.onrender.com` URL Render assigns.
+
+**Manual setup** (without Blueprint): **New** → **Static Site** → connect the repo, then set:
+
+| Setting | Value |
+|--------|--------|
+| Build command | `npm install && npm run build` |
+| Publish directory | `dist` |
+
+Optional: add a custom domain under the site’s **Settings** → **Custom Domains** (e.g. a subdomain pointing at Render).
 
 ## Timeline
 

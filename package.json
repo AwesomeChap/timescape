@@ -9,6 +9,9 @@
     "build": "vite build",
     "preview": "vite preview"
   },
+  "engines": {
+    "node": ">=20"
+  },
   "author": "Jatin Kumar",
   "license": "MIT",
   "dependencies": {
