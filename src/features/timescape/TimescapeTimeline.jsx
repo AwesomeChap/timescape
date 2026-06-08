@@ -20,7 +20,12 @@ export default function TimescapeTimeline({
   const trackFillWidth = `calc((100% - 2 * var(--timeline-rail-inset)) * ${fillRatio})`;
 
   return (
-    <div className="timescape-timeline" role="group" aria-label="Historical timeline">
+    <div
+      className="timescape-timeline"
+      style={{ '--timeline-stop-count': TIMELINE_ERAS.length }}
+      role="group"
+      aria-label="Historical timeline"
+    >
       <div className="timescape-timeline__control">
         <div
           className="timescape-timeline__track-fill"

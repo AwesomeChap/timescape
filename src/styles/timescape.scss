@@ -194,10 +194,30 @@ $timescape-copy-gap: calc(16 * #{$mesh});
   }
 }
 
+.timescape-page__photo {
+  margin: calc(8 * #{$mesh}) 0 0;
+  padding: 0;
+
+  img {
+    display: block;
+    width: 100%;
+    border-radius: 2px;
+    opacity: 0.88;
+  }
+
+  figcaption {
+    display: block;
+    margin-top: calc(2 * #{$mesh});
+    font-size: 0.62rem;
+    color: rgba(221, 221, 221, 0.42);
+    letter-spacing: 0.04em;
+  }
+}
+
 .timescape-timeline {
   width: 100%;
   padding: calc(2 * #{$mesh}) 0 calc(2 * #{$mesh});
-  --timeline-stop-count: 3;
+  --timeline-stop-count: 4;
   --timeline-rail-inset: calc(100% / (2 * var(--timeline-stop-count)));
   --timeline-rail-height: calc(0.5 * #{$mesh});
   --timeline-rail-muted: #3a3a3a;

@@ -93,6 +93,15 @@ export default function App() {
                   className="timescape-page__era-heading"
                 />
                 <p className="text">{displayEra.description}</p>
+                {displayEra.photo && (
+                  <figure className="timescape-page__photo">
+                    <img
+                      src={displayEra.photo}
+                      alt={`Historical photo — ${displayEra.year}`}
+                    />
+                    <figcaption>© International Mozarteum Foundation Salzburg</figcaption>
+                  </figure>
+                )}
               </div>
             </aside>
           </div>
