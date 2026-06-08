@@ -1,0 +1,38 @@
+{
+  "app": {
+    "subtitle": "Experiência de hackathon"
+  },
+  "monument": {
+    "name": "Mozart's Wohnhaus",
+    "location": "Makartplatz, Salzburgo, Áustria"
+  },
+  "ui": {
+    "dragHint": "Arraste para orbitar · role para ampliar",
+    "resetZoom": "Redefinir zoom",
+    "resetZoomAria": "Redefinir o zoom e o ângulo da câmara",
+    "timelineAria": "Linha do tempo histórica",
+    "language": "Idioma"
+  },
+  "eras": {
+    "era1994": {
+      "label": "Atualidade",
+      "description": "1989: A Fundação Internacional Mozarteum, que já havia adquirido em 1955 a parte preservada do Tanzmeistersaal para fins de museu, comprou a parte restante do edifício.\n\n1994: O edifício de escritórios foi demolido e a reconstrução começou com base nas plantas originais.\n\n1996: Abertura do Museu Residência de Mozart.\n\n2022: A restaurada casinha da Flauta Mágica foi colocada no pátio. Foi transferida da sua localização de longa data no jardim do Mozarteum após as renovações da década de 2020."
+    },
+    "era1952": {
+      "label": "Escritório de seguros",
+      "description": "O proprietário da época vendeu a secção bombardeada à companhia de seguros Assicurazioni Generali, que ali construiu um edifício de escritórios em 1952."
+    },
+    "era1944": {
+      "label": "Após o bombardeamento",
+      "description": "Dois terços da casa foram destruídos por uma bomba aérea."
+    },
+    "era1685": {
+      "label": "Residência unificada",
+      "description": "Até 1685, era composta por duas casas.\n\n1711: Franz Gottlieb Spöckner recebeu por decreto a autorização para dar aulas de dança a membros da nobreza nesta casa. Por esse motivo, a partir de 1713 a casa passou a chamar-se \"Tanzmeistersaal\".\n\n1773: Os Mozart mudaram-se para a sua nova casa, muito mais espaçosa, na então Hannibalplatz (atual Makartplatz 8).\n\n1939: A casa foi classificada como monumento histórico."
+    },
+    "era1617": {
+      "label": "Casas gémeas",
+      "description": "O edifício é mencionado pela primeira vez em registos históricos em 1617."
+    }
+  }
+}

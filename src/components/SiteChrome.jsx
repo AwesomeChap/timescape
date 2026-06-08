@@ -1,4 +1,5 @@
 import React from 'react';
+import LanguageSelector from '@/components/LanguageSelector';
 
 export default function SiteChrome() {
   return (
@@ -14,6 +15,7 @@ export default function SiteChrome() {
           alt="Jatin Kumar"
         />
       </a>
+      <LanguageSelector />
     </header>
   );
 }

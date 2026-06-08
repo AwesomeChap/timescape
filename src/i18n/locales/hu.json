@@ -1,0 +1,38 @@
+{
+  "app": {
+    "subtitle": "Hackathon kísérlet"
+  },
+  "monument": {
+    "name": "Mozart's Wohnhaus",
+    "location": "Makartplatz, Salzburg, Ausztria"
+  },
+  "ui": {
+    "dragHint": "Húzd a forgatáshoz · görgesd a nagyításhoz",
+    "resetZoom": "Nagyítás visszaállítása",
+    "resetZoomAria": "Nagyítás és kameraszög visszaállítása",
+    "timelineAria": "Történelmi idővonal",
+    "language": "Nyelv"
+  },
+  "eras": {
+    "era1994": {
+      "label": "Napjaink",
+      "description": "1989: A Nemzetközi Mozarteum Alapítvány, amely 1955-ben már megszerezte a Tanzmeistersaal megmaradt részét múzeumi célokra, megvásárolta az épület fennmaradó részét.\n\n1994: Az irodaházat lebontották, és az újjáépítés az eredeti tervek alapján kezdődött meg.\n\n1996: A Mozart Lakóház Múzeum megnyitása.\n\n2022: A felújított Varázsfuvola-házikót az udvarra helyezték. A 2020-as évek felújításait követően a Mozarteum kertjében lévő hosszú évek óta megszokott helyéről költöztették ide."
+    },
+    "era1952": {
+      "label": "Biztosítási iroda",
+      "description": "Az akkori tulajdonos eladta a lebombázott részt az Assicurazioni Generali biztosítótársaságnak, amely 1952-ben irodaházat épített oda."
+    },
+    "era1944": {
+      "label": "A bombázás után",
+      "description": "A ház kétharmadát egy légibomba elpusztította."
+    },
+    "era1685": {
+      "label": "Egyesített lakóház",
+      "description": "1685-ig két házból állt.\n\n1711: Franz Gottlieb Spöckner rendelettel engedélyt kapott arra, hogy ebben a házban táncoktatást tartson a nemesség tagjai számára. Emiatt a házat 1713-tól \"Tanzmeistersaal\" néven emlegették.\n\n1773: A Mozart család beköltözött új, sokkal tágasabb otthonába az akkori Hannibalplatzon (ma Makartplatz 8.).\n\n1939: A házat műemlékké nyilvánították."
+    },
+    "era1617": {
+      "label": "Ikerházak",
+      "description": "Az épületet először 1617-ben említik történelmi feljegyzések."
+    }
+  }
+}

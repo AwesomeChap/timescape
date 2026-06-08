@@ -1,0 +1,38 @@
+{
+  "app": {
+    "subtitle": "Hackathon deneyi"
+  },
+  "monument": {
+    "name": "Mozart's Wohnhaus",
+    "location": "Makartplatz, Salzburg, Avusturya"
+  },
+  "ui": {
+    "dragHint": "Döndürmek için sürükleyin · yakınlaştırmak için kaydırın",
+    "resetZoom": "Yakınlaştırmayı sıfırla",
+    "resetZoomAria": "Yakınlaştırmayı ve kamera açısını sıfırla",
+    "timelineAria": "Tarihsel zaman çizelgesi",
+    "language": "Dil"
+  },
+  "eras": {
+    "era1994": {
+      "label": "Günümüz",
+      "description": "1989: 1955 yılında Tanzmeistersaal'ın korunan bölümünü müze amaçlı zaten edinmiş olan Uluslararası Mozarteum Vakfı, binanın kalan kısmını satın aldı.\n\n1994: Ofis binası yıkıldı ve özgün planlara dayanarak yeniden inşa çalışmaları başladı.\n\n1996: Mozart'ın Evi Müzesi'nin açılışı.\n\n2022: Restore edilen Sihirli Flüt köşkü avluya yerleştirildi. 2020'lerdeki yenileme çalışmalarının ardından Mozarteum bahçesindeki uzun yıllardır bulunduğu yerden buraya taşındı."
+    },
+    "era1952": {
+      "label": "Sigorta ofisi",
+      "description": "O dönemki mal sahibi, bombalanan bölümü Assicurazioni Generali sigorta şirketine sattı; şirket 1952'de oraya bir ofis binası inşa etti."
+    },
+    "era1944": {
+      "label": "Bombardımanın ardından",
+      "description": "Evin üçte ikisi bir hava bombasıyla yıkıldı."
+    },
+    "era1685": {
+      "label": "Birleştirilmiş konut",
+      "description": "1685'e kadar iki evden oluşuyordu.\n\n1711: Franz Gottlieb Spöckner, bir kararnameyle bu evde soylulara dans dersleri verme izni aldı. Bu nedenle ev, 1713'ten itibaren \"Tanzmeistersaal\" olarak anıldı.\n\n1773: Mozart ailesi, o zamanki Hannibalplatz'taki (bugünkü Makartplatz 8) yeni ve çok daha geniş evlerine taşındı.\n\n1939: Ev, tarihi anıt olarak tescillendi."
+    },
+    "era1617": {
+      "label": "İkiz evler",
+      "description": "Bina, tarihi kayıtlarda ilk kez 1617'de anılmaktadır."
+    }
+  }
+}

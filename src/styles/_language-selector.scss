@@ -1,0 +1,116 @@
+@use 'breakpoints' as *;
+
+.language-selector {
+  position: relative;
+  margin-left: auto;
+  pointer-events: auto;
+  font-family: Futura, 'Plus Jakarta Sans', sans-serif;
+}
+
+.language-selector__toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  padding: 6px 10px;
+  border: 1px solid rgba(221, 221, 221, 0.22);
+  border-radius: 0;
+  background: rgba(10, 10, 10, 0.72);
+  color: rgba(221, 221, 221, 0.82);
+  font-size: 0.66rem;
+  font-weight: 400;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition:
+    color 0.2s ease,
+    border-color 0.2s ease,
+    background 0.2s ease;
+
+  &:hover,
+  &:focus-visible {
+    color: rgba(221, 221, 221, 0.96);
+    border-color: rgba(221, 221, 221, 0.42);
+    background: rgba(10, 10, 10, 0.9);
+    outline: none;
+  }
+}
+
+.language-selector__flag {
+  width: 1.1em;
+  height: 0.825em;
+  border-radius: 1px;
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.25);
+  flex-shrink: 0;
+}
+
+.language-selector__code {
+  line-height: 1;
+}
+
+.language-selector__menu {
+  position: absolute;
+  top: calc(100% + 6px);
+  right: 0;
+  z-index: 20;
+  margin: 0;
+  padding: 4px;
+  list-style: none;
+  max-height: min(60vh, 420px);
+  overflow-y: auto;
+  width: 200px;
+  border: 1px solid rgba(221, 221, 221, 0.2);
+  background: rgba(14, 14, 14, 0.97);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.45);
+  backdrop-filter: blur(6px);
+}
+
+.language-selector__option {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  margin: 0;
+  padding: 8px 10px;
+  border: none;
+  border-radius: 0;
+  background: transparent;
+  color: rgba(221, 221, 221, 0.78);
+  font-size: 0.82rem;
+  font-weight: 300;
+  text-align: left;
+  cursor: pointer;
+  transition:
+    color 0.15s ease,
+    background 0.15s ease;
+
+  &:hover,
+  &:focus-visible {
+    color: #fff;
+    background: rgba(255, 255, 255, 0.08);
+    outline: none;
+  }
+
+  &--active {
+    color: #fff;
+    background: rgba(255, 13, 45, 0.16);
+  }
+}
+
+.language-selector__name {
+  line-height: 1.1;
+}
+
+[dir='rtl'] .language-selector {
+  margin-left: 0;
+  margin-right: auto;
+}
+
+[dir='rtl'] .language-selector__menu {
+  right: auto;
+  left: 0;
+}
+
+[dir='rtl'] .language-selector__option {
+  text-align: right;
+}

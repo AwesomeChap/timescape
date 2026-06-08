@@ -1,13 +1,15 @@
 import React, { Suspense, lazy, useCallback, useEffect, useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import Heading from '@/components/Heading';
 import TimescapeTimeline from '@/features/timescape/TimescapeTimeline';
-import { MONUMENT, TIMELINE_ERAS, MORPH_DURATION_MS } from '@/features/timescape/timescapeMeta';
+import { TIMELINE_ERAS, MORPH_DURATION_MS } from '@/features/timescape/timescapeMeta';
 
 const TimescapeCanvas = lazy(() => import('@/features/timescape/TimescapeCanvas'));
 
 const PRESENT_ERA_INDEX = 0;
 
 export default function App() {
+  const { t } = useTranslation();
   const [activeIndex, setActiveIndex] = useState(PRESENT_ERA_INDEX);
   const [morphProgress, setMorphProgress] = useState(1);
   const [fromEraIndex, setFromEraIndex] = useState(PRESENT_ERA_INDEX);
@@ -78,10 +80,10 @@ export default function App() {
         <div className="sub-section timescape-page__hero">
           <div className="timescape-page__copy-column">
             <header className="timescape-page__intro">
-              <Heading heading="Timescape" subHeading="Hackathon experiment" />
+              <Heading heading="Timescape" subHeading={t('app.subtitle')} />
               <p className="text timescape-page__monument">
-                {MONUMENT.name}
-                <span className="timescape-page__location">{MONUMENT.location}</span>
+                {t('monument.name')}
+                <span className="timescape-page__location">{t('monument.location')}</span>
               </p>
             </header>
 
@@ -89,10 +91,10 @@ export default function App() {
               <div className="timescape-page__era">
                 <Heading
                   heading={String(displayEra.year)}
-                  subHeading={displayEra.label}
+                  subHeading={t(`eras.${displayEra.id}.label`)}
                   className="timescape-page__era-heading"
                 />
-                {displayEra.description
+                {t(`eras.${displayEra.id}.description`)
                   .split('\n')
                   .filter((line) => line.trim() !== '')
                   .map((line, index) => {
@@ -118,14 +120,14 @@ export default function App() {
             <div className="timescape-page__stage">
               <div className="timescape-page__model">
                 <div className="timescape-page__stage-controls">
-                  <p className="timescape-page__stage-hint">Drag to orbit · scroll to zoom</p>
+                  <p className="timescape-page__stage-hint">{t('ui.dragHint')}</p>
                   <button
                     type="button"
                     className="timescape-page__reset-view"
                     onClick={() => canvasRef.current?.resetView()}
-                    aria-label="Reset zoom and camera angle"
+                    aria-label={t('ui.resetZoomAria')}
                   >
-                    Reset zoom
+                    {t('ui.resetZoom')}
                   </button>
                 </div>
                 <div className="image timescape-page__canvas-shell">

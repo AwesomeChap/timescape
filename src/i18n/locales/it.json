@@ -1,0 +1,38 @@
+{
+  "app": {
+    "subtitle": "Esperimento hackathon"
+  },
+  "monument": {
+    "name": "Mozart's Wohnhaus",
+    "location": "Makartplatz, Salisburgo, Austria"
+  },
+  "ui": {
+    "dragHint": "Trascina per orbitare · scorri per ingrandire",
+    "resetZoom": "Reimposta zoom",
+    "resetZoomAria": "Reimposta lo zoom e l'angolo della telecamera",
+    "timelineAria": "Linea temporale storica",
+    "language": "Lingua"
+  },
+  "eras": {
+    "era1994": {
+      "label": "Oggi",
+      "description": "1989: La Fondazione Internazionale Mozarteum, che già nel 1955 aveva acquisito la parte conservata del Tanzmeistersaal a scopo museale, acquistò la restante parte dell'edificio.\n\n1994: L'edificio per uffici fu demolito e iniziò la ricostruzione sulla base dei progetti originali.\n\n1996: Apertura del Museo della Casa di Mozart.\n\n2022: La restaurata casetta del Flauto magico è stata collocata nel cortile. È stata spostata dalla sua collocazione storica nel giardino del Mozarteum in seguito ai lavori di ristrutturazione degli anni 2020."
+    },
+    "era1952": {
+      "label": "Ufficio assicurativo",
+      "description": "Il proprietario di allora vendette la parte bombardata alla compagnia di assicurazioni Assicurazioni Generali, che vi costruì un edificio per uffici nel 1952."
+    },
+    "era1944": {
+      "label": "Dopo il bombardamento",
+      "description": "Due terzi della casa furono distrutti da una bomba aerea."
+    },
+    "era1685": {
+      "label": "Residenza unificata",
+      "description": "Fino al 1685 era composta da due case.\n\n1711: Franz Gottlieb Spöckner ottenne per decreto il permesso di tenere lezioni di danza per i membri della nobiltà in questa casa. Per questo motivo, a partire dal 1713 la casa fu chiamata \"Tanzmeistersaal\".\n\n1773: I Mozart si trasferirono nella loro nuova e molto più spaziosa abitazione nell'allora Hannibalplatz (oggi Makartplatz 8).\n\n1939: La casa è stata dichiarata monumento storico."
+    },
+    "era1617": {
+      "label": "Case gemelle",
+      "description": "L'edificio è menzionato per la prima volta nei documenti storici nel 1617."
+    }
+  }
+}

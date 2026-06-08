@@ -1,0 +1,38 @@
+{
+  "app": {
+    "subtitle": "Hackathon-Experiment"
+  },
+  "monument": {
+    "name": "Mozart's Wohnhaus",
+    "location": "Makartplatz, Salzburg, Österreich"
+  },
+  "ui": {
+    "dragHint": "Ziehen zum Drehen · Scrollen zum Zoomen",
+    "resetZoom": "Zoom zurücksetzen",
+    "resetZoomAria": "Zoom und Kamerawinkel zurücksetzen",
+    "timelineAria": "Historische Zeitleiste",
+    "language": "Sprache"
+  },
+  "eras": {
+    "era1994": {
+      "label": "Heute",
+      "description": "1989: Die Internationale Stiftung Mozarteum, die bereits 1955 den erhaltenen Teil des Tanzmeistersaals für museale Zwecke erworben hatte, kaufte den restlichen Teil des Gebäudes.\n\n1994: Das Bürogebäude wurde abgerissen, und der Wiederaufbau begann nach den ursprünglichen Plänen.\n\n1996: Eröffnung des Museums Mozart-Wohnhaus.\n\n2022: Das restaurierte Zauberflötenhäuschen wurde im Innenhof aufgestellt. Es wurde nach Renovierungen in den 2020er-Jahren von seinem langjährigen Standort im Garten des Mozarteums hierher versetzt."
+    },
+    "era1952": {
+      "label": "Versicherungsbüro",
+      "description": "Der damalige Eigentümer verkaufte den ausgebombten Teil an die Versicherung Assicurazioni Generali, die dort 1952 ein Bürogebäude errichtete."
+    },
+    "era1944": {
+      "label": "Nach der Bombardierung",
+      "description": "Zwei Drittel des Hauses wurden durch eine Fliegerbombe zerstört."
+    },
+    "era1685": {
+      "label": "Zusammengelegtes Wohnhaus",
+      "description": "Bis 1685 bestand es aus zwei Häusern.\n\n1711: Franz Gottlieb Spöckner erhielt per Dekret die Erlaubnis, in diesem Haus Tanzunterricht für Mitglieder des Adels abzuhalten. Aus diesem Grund wurde das Haus ab 1713 \"Tanzmeistersaal\" genannt.\n\n1773: Die Mozarts zogen in ihr neues, viel geräumigeres Zuhause am damaligen Hannibalplatz (heute Makartplatz 8).\n\n1939: Das Haus wurde unter Denkmalschutz gestellt."
+    },
+    "era1617": {
+      "label": "Zwei Häuser",
+      "description": "Das Gebäude wurde 1617 erstmals urkundlich erwähnt."
+    }
+  }
+}

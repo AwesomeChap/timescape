@@ -1,0 +1,38 @@
+{
+  "app": {
+    "subtitle": "Eksperyment hackathonowy"
+  },
+  "monument": {
+    "name": "Mozart's Wohnhaus",
+    "location": "Makartplatz, Salzburg, Austria"
+  },
+  "ui": {
+    "dragHint": "Przeciągnij, aby obracać · przewiń, aby przybliżyć",
+    "resetZoom": "Resetuj powiększenie",
+    "resetZoomAria": "Resetuj powiększenie i kąt kamery",
+    "timelineAria": "Oś czasu historii",
+    "language": "Język"
+  },
+  "eras": {
+    "era1994": {
+      "label": "Dziś",
+      "description": "1989: Międzynarodowa Fundacja Mozarteum, która już w 1955 roku nabyła zachowaną część Tanzmeistersaal na cele muzealne, wykupiła pozostałą część budynku.\n\n1994: Budynek biurowy został wyburzony, a odbudowę rozpoczęto na podstawie pierwotnych planów.\n\n1996: Otwarcie Muzeum Domu Mozarta.\n\n2022: Odrestaurowany domek z Czarodziejskiego fletu został umieszczony na dziedzińcu. Przeniesiono go z jego wieloletniej lokalizacji w ogrodzie Mozarteum po remontach w latach 2020."
+    },
+    "era1952": {
+      "label": "Biuro ubezpieczeń",
+      "description": "Ówczesny właściciel sprzedał zbombardowaną część firmie ubezpieczeniowej Assicurazioni Generali, która wybudowała tam w 1952 roku budynek biurowy."
+    },
+    "era1944": {
+      "label": "Po bombardowaniu",
+      "description": "Dwie trzecie domu zostały zniszczone przez bombę lotniczą."
+    },
+    "era1685": {
+      "label": "Połączona rezydencja",
+      "description": "Do 1685 roku składał się z dwóch domów.\n\n1711: Franz Gottlieb Spöckner otrzymał na mocy dekretu pozwolenie na prowadzenie w tym domu lekcji tańca dla członków szlachty. Z tego powodu od 1713 roku dom nazywano \"Tanzmeistersaal\".\n\n1773: Rodzina Mozartów przeprowadziła się do nowego, znacznie przestronniejszego domu przy ówczesnym Hannibalplatz (obecnie Makartplatz 8).\n\n1939: Dom został wpisany do rejestru zabytków."
+    },
+    "era1617": {
+      "label": "Dwa domy",
+      "description": "Budynek został po raz pierwszy wymieniony w źródłach historycznych w 1617 roku."
+    }
+  }
+}

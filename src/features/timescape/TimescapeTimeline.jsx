@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { TIMELINE_ERAS, easeInOutCubic } from './timescapeMeta';
 
 export default function TimescapeTimeline({
@@ -8,6 +9,7 @@ export default function TimescapeTimeline({
   morphToIndex,
   onSelectEra,
 }) {
+  const { t } = useTranslation();
   const maxIndex = TIMELINE_ERAS.length - 1;
   const isMorphing = morphFromIndex !== morphToIndex;
   const morphT = isMorphing ? easeInOutCubic(morphProgress) : morphProgress;
@@ -23,7 +25,7 @@ export default function TimescapeTimeline({
     <div
       className="timescape-timeline"
       role="group"
-      aria-label="Historical timeline"
+      aria-label={t('ui.timelineAria')}
       style={{ '--timeline-stop-count': TIMELINE_ERAS.length }}
     >
       <div className="timescape-timeline__control">
@@ -54,7 +56,7 @@ export default function TimescapeTimeline({
                   className="timescape-timeline__dot-button"
                   onClick={() => onSelectEra(index)}
                   aria-current={isActive ? 'step' : undefined}
-                  aria-label={`${era.year}: ${era.label}`}
+                  aria-label={`${era.year}: ${t(`eras.${era.id}.label`)}`}
                 >
                   <span className="timescape-timeline__dot" aria-hidden="true" />
                 </button>

@@ -1,0 +1,38 @@
+{
+  "app": {
+    "subtitle": "Hackathon-experiment"
+  },
+  "monument": {
+    "name": "Mozart's Wohnhaus",
+    "location": "Makartplatz, Salzburg, Oostenrijk"
+  },
+  "ui": {
+    "dragHint": "Sleep om te draaien · scroll om te zoomen",
+    "resetZoom": "Zoom resetten",
+    "resetZoomAria": "Zoom en camerahoek resetten",
+    "timelineAria": "Historische tijdlijn",
+    "language": "Taal"
+  },
+  "eras": {
+    "era1994": {
+      "label": "Heden",
+      "description": "1989: De Internationale Stichting Mozarteum, die in 1955 al het bewaard gebleven deel van de Tanzmeistersaal voor museale doeleinden had verworven, kocht het resterende deel van het gebouw.\n\n1994: Het kantoorgebouw werd gesloopt en de wederopbouw begon op basis van de oorspronkelijke plannen.\n\n1996: Opening van het Museum Woonhuis van Mozart.\n\n2022: Het gerestaureerde Toverfluithuisje werd in de binnenplaats geplaatst. Het werd na renovaties in de jaren 2020 verplaatst vanaf zijn jarenlange locatie in de tuin van het Mozarteum."
+    },
+    "era1952": {
+      "label": "Verzekeringskantoor",
+      "description": "De toenmalige eigenaar verkocht het uitgebombardeerde deel aan de verzekeringsmaatschappij Assicurazioni Generali, die daar in 1952 een kantoorgebouw liet bouwen."
+    },
+    "era1944": {
+      "label": "Na het bombardement",
+      "description": "Twee derde van het huis werd verwoest door een luchtbom."
+    },
+    "era1685": {
+      "label": "Samengevoegde woning",
+      "description": "Tot 1685 bestond het uit twee huizen.\n\n1711: Franz Gottlieb Spöckner kreeg bij decreet toestemming om in dit huis dansles te geven aan leden van de adel. Daarom werd het huis vanaf 1713 \"Tanzmeistersaal\" genoemd.\n\n1773: De familie Mozart betrok hun nieuwe, veel ruimere woning aan het toenmalige Hannibalplatz (nu Makartplatz 8).\n\n1939: Het huis werd aangewezen als monument."
+    },
+    "era1617": {
+      "label": "Twee huizen",
+      "description": "Het gebouw wordt voor het eerst vermeld in historische archieven in 1617."
+    }
+  }
+}

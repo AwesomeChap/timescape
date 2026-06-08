@@ -1,0 +1,38 @@
+{
+  "app": {
+    "subtitle": "Expérience de hackathon"
+  },
+  "monument": {
+    "name": "Mozart's Wohnhaus",
+    "location": "Makartplatz, Salzbourg, Autriche"
+  },
+  "ui": {
+    "dragHint": "Glisser pour pivoter · défiler pour zoomer",
+    "resetZoom": "Réinitialiser le zoom",
+    "resetZoomAria": "Réinitialiser le zoom et l'angle de la caméra",
+    "timelineAria": "Chronologie historique",
+    "language": "Langue"
+  },
+  "eras": {
+    "era1994": {
+      "label": "Aujourd'hui",
+      "description": "1989 : La Fondation internationale Mozarteum, qui avait déjà acquis en 1955 la partie conservée du Tanzmeistersaal à des fins muséales, a acheté la partie restante du bâtiment.\n\n1994 : L'immeuble de bureaux a été démoli et la reconstruction a commencé d'après les plans d'origine.\n\n1996 : Ouverture du musée de la Résidence de Mozart.\n\n2022 : La maisonnette restaurée de La Flûte enchantée a été installée dans la cour. Elle a été déplacée de son emplacement de longue date dans le jardin du Mozarteum à la suite de rénovations dans les années 2020."
+    },
+    "era1952": {
+      "label": "Bureau d'assurances",
+      "description": "Le propriétaire de l'époque a vendu la partie bombardée à la compagnie d'assurances Assicurazioni Generali, qui y a construit un immeuble de bureaux en 1952."
+    },
+    "era1944": {
+      "label": "Après le bombardement",
+      "description": "Deux tiers de la maison ont été détruits par une bombe aérienne."
+    },
+    "era1685": {
+      "label": "Résidence réunifiée",
+      "description": "Jusqu'en 1685, elle se composait de deux maisons.\n\n1711 : Franz Gottlieb Spöckner reçut par décret l'autorisation de donner des cours de danse aux membres de la noblesse dans cette maison. C'est pourquoi la maison fut appelée \"Tanzmeistersaal\" à partir de 1713.\n\n1773 : Les Mozart emménagèrent dans leur nouvelle demeure, bien plus spacieuse, sur l'actuelle Hannibalplatz (aujourd'hui Makartplatz 8).\n\n1939 : La maison a été classée monument historique."
+    },
+    "era1617": {
+      "label": "Maisons jumelles",
+      "description": "Le bâtiment est mentionné pour la première fois dans les archives historiques en 1617."
+    }
+  }
+}

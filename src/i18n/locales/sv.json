@@ -1,0 +1,38 @@
+{
+  "app": {
+    "subtitle": "Hackathon-experiment"
+  },
+  "monument": {
+    "name": "Mozart's Wohnhaus",
+    "location": "Makartplatz, Salzburg, Österrike"
+  },
+  "ui": {
+    "dragHint": "Dra för att rotera · skrolla för att zooma",
+    "resetZoom": "Återställ zoom",
+    "resetZoomAria": "Återställ zoom och kameravinkel",
+    "timelineAria": "Historisk tidslinje",
+    "language": "Språk"
+  },
+  "eras": {
+    "era1994": {
+      "label": "Idag",
+      "description": "1989: Internationella Mozarteumstiftelsen, som redan 1955 hade förvärvat den bevarade delen av Tanzmeistersaal för museiändamål, köpte den återstående delen av byggnaden.\n\n1994: Kontorsbyggnaden revs och återuppbyggnaden påbörjades enligt de ursprungliga ritningarna.\n\n1996: Invigning av museet Mozarts bostadshus.\n\n2022: Den restaurerade Trollflöjtsstugan placerades på innergården. Den flyttades från sin mångåriga plats i Mozarteums trädgård efter renoveringar under 2020-talet."
+    },
+    "era1952": {
+      "label": "Försäkringskontor",
+      "description": "Den dåvarande ägaren sålde den bombade delen till försäkringsbolaget Assicurazioni Generali, som byggde en kontorsbyggnad där 1952."
+    },
+    "era1944": {
+      "label": "Efter bombningen",
+      "description": "Två tredjedelar av huset förstördes av en flygbomb."
+    },
+    "era1685": {
+      "label": "Sammanslagen bostad",
+      "description": "Fram till 1685 bestod det av två hus.\n\n1711: Franz Gottlieb Spöckner fick genom dekret tillstånd att hålla danslektioner för adelns medlemmar i detta hus. Av den anledningen kallades huset \"Tanzmeistersaal\" från och med 1713.\n\n1773: Familjen Mozart flyttade in i sitt nya, mycket rymligare hem vid dåvarande Hannibalplatz (nuvarande Makartplatz 8).\n\n1939: Huset har förklarats som byggnadsminne."
+    },
+    "era1617": {
+      "label": "Tvillinghus",
+      "description": "Byggnaden nämns för första gången i historiska källor 1617."
+    }
+  }
+}

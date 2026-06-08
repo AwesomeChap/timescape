@@ -1,0 +1,38 @@
+{
+  "app": {
+    "subtitle": "Experimento de hackathon"
+  },
+  "monument": {
+    "name": "Mozart's Wohnhaus",
+    "location": "Makartplatz, Salzburgo, Austria"
+  },
+  "ui": {
+    "dragHint": "Arrastra para orbitar · desplaza para acercar",
+    "resetZoom": "Restablecer zoom",
+    "resetZoomAria": "Restablecer el zoom y el ángulo de cámara",
+    "timelineAria": "Línea de tiempo histórica",
+    "language": "Idioma"
+  },
+  "eras": {
+    "era1994": {
+      "label": "Actualidad",
+      "description": "1989: La Fundación Internacional Mozarteum, que ya había adquirido en 1955 la parte conservada del Tanzmeistersaal con fines museísticos, compró la parte restante del edificio.\n\n1994: Se demolió el edificio de oficinas y comenzó la reconstrucción según los planos originales.\n\n1996: Apertura del Museo Casa de Mozart.\n\n2022: La restaurada casita de La flauta mágica se colocó en el patio. Fue trasladada desde su ubicación de muchos años en el jardín del Mozarteum tras las renovaciones de la década de 2020."
+    },
+    "era1952": {
+      "label": "Oficina de seguros",
+      "description": "El propietario de entonces vendió la sección bombardeada a la compañía de seguros Assicurazioni Generali, que construyó allí un edificio de oficinas en 1952."
+    },
+    "era1944": {
+      "label": "Tras el bombardeo",
+      "description": "Dos tercios de la casa fueron destruidos por una bomba aérea."
+    },
+    "era1685": {
+      "label": "Residencia unificada",
+      "description": "Hasta 1685 estuvo compuesta por dos casas.\n\n1711: Franz Gottlieb Spöckner recibió por decreto el permiso para impartir clases de baile a miembros de la nobleza en esta casa. Por ello, a partir de 1713 la casa fue llamada \"Tanzmeistersaal\".\n\n1773: Los Mozart se mudaron a su nuevo hogar, mucho más espacioso, en la entonces Hannibalplatz (hoy Makartplatz 8).\n\n1939: La casa fue declarada monumento histórico."
+    },
+    "era1617": {
+      "label": "Casas gemelas",
+      "description": "El edificio se menciona por primera vez en registros históricos en 1617."
+    }
+  }
+}

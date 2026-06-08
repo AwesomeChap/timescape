@@ -1,0 +1,38 @@
+{
+  "app": {
+    "subtitle": "Hackathonový experiment"
+  },
+  "monument": {
+    "name": "Mozart's Wohnhaus",
+    "location": "Makartplatz, Salcburk, Rakousko"
+  },
+  "ui": {
+    "dragHint": "Tažením otáčejte · posouváním přibližujte",
+    "resetZoom": "Obnovit přiblížení",
+    "resetZoomAria": "Obnovit přiblížení a úhel kamery",
+    "timelineAria": "Historická časová osa",
+    "language": "Jazyk"
+  },
+  "eras": {
+    "era1994": {
+      "label": "Současnost",
+      "description": "1989: Mezinárodní nadace Mozarteum, která již v roce 1955 získala dochovanou část Tanzmeistersaalu pro muzejní účely, odkoupila zbývající část budovy.\n\n1994: Kancelářská budova byla zbořena a začala rekonstrukce podle původních plánů.\n\n1996: Otevření muzea Mozartův dům.\n\n2022: Zrestaurovaný domek Kouzelné flétny byl umístěn na nádvoří. Po renovacích ve 20. letech 21. století byl přemístěn ze svého dlouholetého místa v zahradě Mozartea."
+    },
+    "era1952": {
+      "label": "Pojišťovací kancelář",
+      "description": "Tehdejší majitel prodal vybombardovanou část pojišťovně Assicurazioni Generali, která zde v roce 1952 postavila kancelářskou budovu."
+    },
+    "era1944": {
+      "label": "Po bombardování",
+      "description": "Dvě třetiny domu byly zničeny leteckou pumou."
+    },
+    "era1685": {
+      "label": "Sloučené sídlo",
+      "description": "Do roku 1685 se skládal ze dvou domů.\n\n1711: Franz Gottlieb Spöckner získal výnosem povolení pořádat v tomto domě taneční hodiny pro členy šlechty. Z toho důvodu se dům od roku 1713 nazýval \"Tanzmeistersaal\".\n\n1773: Mozartovi se přestěhovali do svého nového, mnohem prostornějšího domova na tehdejším Hannibalplatz (dnes Makartplatz 8).\n\n1939: Dům byl prohlášen za kulturní památku."
+    },
+    "era1617": {
+      "label": "Dva domy",
+      "description": "Budova je poprvé zmíněna v historických pramenech v roce 1617."
+    }
+  }
+}
