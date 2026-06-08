@@ -214,30 +214,9 @@ $timescape-copy-gap: calc(16 * #{$mesh});
   }
 }
 
-@keyframes timeline-dot-pulse {
-  0%, 100% {
-    box-shadow:
-      0 0 0 0 rgba($red-brand, 0),
-      0 0 6px 1px rgba($red-brand, 0.14);
-  }
-  50% {
-    box-shadow:
-      0 0 0 calc(2.5 * #{$mesh}) rgba($red-brand, 0.06),
-      0 0 14px 4px rgba($red-brand, 0.11);
-  }
-}
-
-@keyframes timeline-dot-core {
-  0%, 100% {
-    box-shadow:
-      inset 0 1px 2px rgba(255, 255, 255, 0.35),
-      0 0 4px 1px rgba($red-brand, 0.55);
-  }
-  50% {
-    box-shadow:
-      inset 0 1px 2px rgba(255, 255, 255, 0.25),
-      0 0 8px 3px rgba($red-brand, 0.35);
-  }
+@keyframes era-btn-glow {
+  0%, 100% { box-shadow: 0 0 10px 1px rgba($red-brand, 0.32), inset 0 1px 0 rgba(255, 255, 255, 0.16); }
+  50%       { box-shadow: 0 0 18px 4px rgba($red-brand, 0.22), inset 0 1px 0 rgba(255, 255, 255, 0.12); }
 }
 
 .timescape-timeline {
@@ -252,7 +231,6 @@ $timescape-copy-gap: calc(16 * #{$mesh});
 
 .timescape-timeline__control {
   position: relative;
-  --timeline-dot-size: calc(7 * #{$mesh});
   padding-bottom: calc(2 * #{$mesh});
 }
 
@@ -299,183 +277,101 @@ $timescape-copy-gap: calc(16 * #{$mesh});
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: calc(4 * #{$mesh});
+  gap: calc(2 * #{$mesh});
   width: 100%;
   pointer-events: none;
-  color: rgba(221, 221, 221, 0.52);
-  transition: color 0.2s ease;
-
-  &--active {
-    color: rgba(221, 221, 221, 0.92);
-  }
 }
 
-.timescape-timeline__dot-button {
+// ── Year chip button ──────────────────────────────────────────────────────────
+.timescape-timeline__era-btn {
   position: relative;
   z-index: 2;
   display: flex;
   align-items: center;
   justify-content: center;
-  flex-shrink: 0;
-  width: calc(12 * #{$mesh});
-  height: calc(12 * #{$mesh});
-  margin-top: calc(4 * #{$mesh} - 6 * #{$mesh});
-  padding: 0;
-  border: none;
-  background: transparent;
+  height: calc(8 * #{$mesh});
+  padding: 0 calc(3.5 * #{$mesh});
+  border: 1px solid rgba(221, 221, 221, 0.13);
+  border-radius: 3px;
+  background: rgba(8, 8, 8, 0.65);
+  color: rgba(221, 221, 221, 0.34);
+  font-family: Futura, sans-serif;
+  font-size: 0.82rem;
+  letter-spacing: 0.1em;
+  font-variant-numeric: tabular-nums;
   cursor: pointer;
   pointer-events: auto;
-
-  &:hover + .timescape-timeline__year,
-  &:focus-visible + .timescape-timeline__year {
-    color: rgba(221, 221, 221, 0.72);
-  }
+  white-space: nowrap;
+  transition:
+    border-color 0.2s ease,
+    background 0.2s ease,
+    color 0.2s ease,
+    box-shadow 0.2s ease,
+    transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1),
+    letter-spacing 0.2s ease;
 
   &:focus-visible {
     outline: none;
+    box-shadow: 0 0 0 2px rgba($red-brand, 0.55);
   }
 
-  &:focus-visible .timescape-timeline__dot::after {
-    box-shadow: 0 0 0 1px rgba(221, 221, 221, 0.45);
+  // hover — idle
+  &:hover {
+    border-color: rgba(221, 221, 221, 0.3);
+    color: rgba(221, 221, 221, 0.65);
+    background: rgba(22, 22, 22, 0.8);
+  }
+
+  // visited
+  .timescape-timeline__stop--visited & {
+    border-color: rgba($red-brand, 0.36);
+    background: rgba($red-brand, 0.07);
+    color: rgba($red-brand, 0.7);
+  }
+
+  // visited hover
+  .timescape-timeline__stop--visited &:hover {
+    border-color: rgba($red-brand, 0.6);
+    background: rgba($red-brand, 0.13);
+    color: rgba($red-brand, 0.95);
+  }
+
+  // active
+  .timescape-timeline__stop--active & {
+    border-color: $red-brand;
+    background: $red-brand;
+    color: #fff;
+    letter-spacing: 0.12em;
+    transform: scaleX(1.05) scaleY(1.08);
+    animation: era-btn-glow 2.8s ease-in-out infinite;
   }
 }
 
-.timescape-timeline__year {
-  position: relative;
-  font-family: Futura, sans-serif;
-  font-size: 0.95rem;
-  letter-spacing: 0.05em;
-  font-variant-numeric: tabular-nums;
-  line-height: 1.1;
+// ── Era label below chip ──────────────────────────────────────────────────────
+.timescape-timeline__era-label {
+  font-size: 0.57rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(221, 221, 221, 0.24);
   pointer-events: none;
   user-select: none;
-  transition: color 0.2s ease, letter-spacing 0.2s ease;
+  text-align: center;
+  line-height: 1.3;
+  transition: color 0.2s ease;
 
-  // tick connector between dot and label
-  &::before {
-    content: '';
-    display: block;
-    width: 1px;
-    height: calc(2 * #{$mesh});
-    background: currentColor;
-    opacity: 0.22;
-    margin: 0 auto calc(2 * #{$mesh});
-    transition: opacity 0.2s ease, height 0.2s ease;
+  .timescape-timeline__stop--visited & {
+    color: rgba($red-brand, 0.4);
   }
 
   .timescape-timeline__stop--active & {
-    letter-spacing: 0.07em;
-
-    &::before {
-      opacity: 0.55;
-      height: calc(2.5 * #{$mesh});
-    }
+    color: rgba(221, 221, 221, 0.52);
   }
 }
 
-.timescape-timeline__dot {
-  position: relative;
-  display: block;
-  width: var(--timeline-dot-size);
-  height: var(--timeline-dot-size);
-  background: transparent;
-  border: none;
-  pointer-events: none;
-
-  // ── outer ring ────────────────────────────────────────────────────────────
-  &::before {
-    content: '';
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    width: calc(4 * #{$mesh});
-    height: calc(4 * #{$mesh});
-    border-radius: 50%;
-    border: 1px solid rgba(221, 221, 221, 0.14);
-    background: transparent;
-    transform: translate(-50%, -50%);
-    transition:
-      width 0.35s cubic-bezier(0.34, 1.56, 0.64, 1),
-      height 0.35s cubic-bezier(0.34, 1.56, 0.64, 1),
-      border-color 0.3s ease,
-      box-shadow 0.3s ease;
+@media only screen and (max-width: 600px) {
+  .timescape-timeline__era-label {
+    display: none;
   }
-
-  // ── inner core ────────────────────────────────────────────────────────────
-  &::after {
-    content: '';
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    width: calc(1.5 * #{$mesh});
-    height: calc(1.5 * #{$mesh});
-    border-radius: 50%;
-    background: rgba(120, 120, 120, 0.7);
-    box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.08);
-    transform: translate(-50%, -50%);
-    transition:
-      width 0.28s cubic-bezier(0.34, 1.56, 0.64, 1),
-      height 0.28s cubic-bezier(0.34, 1.56, 0.64, 1),
-      background 0.25s ease,
-      box-shadow 0.25s ease;
-  }
-
-  // ── visited state ─────────────────────────────────────────────────────────
-  .timescape-timeline__stop--visited &::before {
-    width: calc(5 * #{$mesh});
-    height: calc(5 * #{$mesh});
-    border-color: rgba($red-brand, 0.45);
-    box-shadow: 0 0 4px 1px rgba($red-brand, 0.12);
-  }
-
-  .timescape-timeline__stop--visited &::after {
-    width: calc(2.5 * #{$mesh});
-    height: calc(2.5 * #{$mesh});
-    background: $red-brand;
-    box-shadow:
-      inset 0 1px 1px rgba(255, 255, 255, 0.2),
-      0 0 3px 1px rgba($red-brand, 0.3);
-  }
-
-  // ── active state ──────────────────────────────────────────────────────────
-  .timescape-timeline__stop--active &::before {
-    width: var(--timeline-dot-size);
-    height: var(--timeline-dot-size);
-    border-width: 1.5px;
-    border-color: rgba($red-brand, 0.72);
-    animation: timeline-dot-pulse 2.6s ease-in-out infinite;
-  }
-
-  .timescape-timeline__stop--active &::after {
-    width: calc(3.5 * #{$mesh});
-    height: calc(3.5 * #{$mesh});
-    background: $red-brand;
-    animation: timeline-dot-core 2.6s ease-in-out infinite;
-  }
-}
-
-// ── hover states ─────────────────────────────────────────────────────────────
-.timescape-timeline__dot-button:hover .timescape-timeline__dot::before {
-  border-color: rgba(221, 221, 221, 0.32);
-  width: calc(5.5 * #{$mesh});
-  height: calc(5.5 * #{$mesh});
-  box-shadow: 0 0 6px 1px rgba(221, 221, 221, 0.06);
-}
-
-.timescape-timeline__dot-button:hover .timescape-timeline__dot::after {
-  width: calc(2 * #{$mesh});
-  height: calc(2 * #{$mesh});
-  background: rgba(200, 200, 200, 0.65);
-}
-
-.timescape-timeline__stop--visited .timescape-timeline__dot-button:hover .timescape-timeline__dot::before {
-  border-color: rgba($red-brand, 0.65);
-  box-shadow: 0 0 8px 2px rgba($red-brand, 0.18);
-}
-
-.timescape-timeline__stop--visited .timescape-timeline__dot-button:hover .timescape-timeline__dot::after {
-  width: calc(3 * #{$mesh});
-  height: calc(3 * #{$mesh});
 }
 
 @media only screen and (max-width: 1023px) {

@@ -14,7 +14,6 @@ export default function TimescapeTimeline({
   const sliderValue = isMorphing
     ? morphFromIndex + (morphToIndex - morphFromIndex) * morphT
     : activeIndex;
-  // Slight lead so the active dot grows as the fill reaches the stop, not after.
   const currentIndex = Math.min(Math.floor(sliderValue + 0.08), maxIndex);
   const fillRatio = maxIndex > 0 ? sliderValue / maxIndex : 0;
   const trackFillWidth = `calc((100% - 2 * var(--timeline-rail-inset)) * ${fillRatio})`;
@@ -51,15 +50,15 @@ export default function TimescapeTimeline({
               >
                 <button
                   type="button"
-                  className="timescape-timeline__dot-button"
+                  className="timescape-timeline__era-btn"
                   onClick={() => onSelectEra(index)}
                   aria-current={isActive ? 'step' : undefined}
                   aria-label={`${era.year}: ${era.label}`}
                 >
-                  <span className="timescape-timeline__dot" aria-hidden="true" />
-                </button>
-                <span className="timescape-timeline__year" aria-hidden="true">
                   {era.year}
+                </button>
+                <span className="timescape-timeline__era-label" aria-hidden="true">
+                  {era.label}
                 </span>
               </div>
             );
