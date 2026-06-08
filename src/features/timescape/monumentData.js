@@ -10,7 +10,7 @@
 import { easeInOutCubic } from './timescapeMeta';
 export { easeInOutCubic } from './timescapeMeta';
 
-const DENSITY = 1.5;
+const DENSITY = 2.25;
 const HIDDEN = [0, -8, 0];
 
 function steps(n) { return Math.max(1, Math.round(n * DENSITY)); }

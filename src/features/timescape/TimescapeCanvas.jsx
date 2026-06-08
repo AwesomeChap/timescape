@@ -11,23 +11,50 @@ import {
 
 const VERTEX_SHADER = `
   attribute float size;
+  attribute float seed;
   varying vec3 vColor;
+  varying float vDepth;
   varying float vLift;
+  varying float vSeed;
   uniform vec3 tint;
   uniform float pointScale;
 
+  vec3 materialColor(vec3 p) {
+    float roof = smoothstep(4.65, 5.9, p.y);
+    float ground = 1.0 - smoothstep(0.0, 0.2, p.y);
+    float rubble = (1.0 - smoothstep(1.2, 2.1, p.y)) * smoothstep(-4.2, -0.2, -p.x);
+    float front = smoothstep(2.75, 3.12, p.z);
+    float windowBand = smoothstep(1.05, 1.45, p.y) * (1.0 - smoothstep(1.95, 2.35, p.y));
+    windowBand += smoothstep(2.65, 2.95, p.y) * (1.0 - smoothstep(3.55, 3.95, p.y));
+    float windowGlint = front * windowBand * step(0.64, fract(abs(p.x) * 1.85 + 0.18));
+
+    vec3 wallTone = tint * (0.86 + 0.2 * seed);
+    vec3 roofTone = vec3(0.34, 0.18, 0.12);
+    vec3 stoneTone = vec3(0.28, 0.27, 0.24);
+    vec3 glassTone = vec3(0.08, 0.16, 0.19);
+
+    vec3 color = mix(wallTone, roofTone, roof);
+    color = mix(color, stoneTone, max(ground * 0.72, rubble * 0.58));
+    color = mix(color, glassTone, windowGlint * 0.92);
+    return color;
+  }
+
   void main() {
-    vColor = tint;
     vLift = position.y;
+    vSeed = seed;
     vec4 mvPosition = modelViewMatrix * vec4(position, 1.0);
-    gl_PointSize = size * pointScale * (340.0 / -mvPosition.z);
+    vDepth = clamp((-mvPosition.z - 5.0) / 19.0, 0.0, 1.0);
+    vColor = materialColor(position);
+    gl_PointSize = size * pointScale * (420.0 / -mvPosition.z);
     gl_Position = projectionMatrix * mvPosition;
   }
 `;
 
 const FRAGMENT_SHADER = `
   varying vec3 vColor;
+  varying float vDepth;
   varying float vLift;
+  varying float vSeed;
   uniform float morphMix;
 
   void main() {
@@ -35,12 +62,13 @@ const FRAGMENT_SHADER = `
     float dist = length(uv);
     if (dist > 0.5) discard;
 
-    float alpha = smoothstep(0.5, 0.18, dist);
-    float core = 1.0 - smoothstep(0.0, 0.2, dist);
-    float lift = smoothstep(-1.4, 2.1, vLift);
-    float shimmer = 0.04 * sin(morphMix * 12.566) * (1.0 - morphMix);
-    vec3 color = vColor * (0.52 + lift * 0.28 + core * 0.42 + shimmer);
-    gl_FragColor = vec4(color, alpha * 0.88);
+    float softDisc = smoothstep(0.5, 0.24, dist);
+    float denseCore = 1.0 - smoothstep(0.0, 0.18, dist);
+    float heightLight = smoothstep(0.15, 5.7, vLift);
+    float transitionDust = sin((vSeed + morphMix) * 18.8496) * 0.025 * (1.0 - abs(morphMix - 0.5) * 2.0);
+    vec3 color = vColor * (0.62 + heightLight * 0.34 + denseCore * 0.2 - vDepth * 0.18 + transitionDust);
+    float alpha = softDisc * (0.82 - vDepth * 0.18);
+    gl_FragColor = vec4(color, alpha);
   }
 `;
 
@@ -48,23 +76,27 @@ function createPointSizes(count) {
   const sizes = new Float32Array(count);
   for (let i = 0; i < count; i += 1) {
     const noise = Math.sin(i * 12.9898 + 78.233) * 43758.5453;
-    const r = noise - Math.floor(noise);
-    sizes[i] = 0.38 + r * 0.55;
+    const random = noise - Math.floor(noise);
+    sizes[i] = 0.22 + random * 0.34;
   }
   return sizes;
 }
 
-/** West facade (Domplatz) faces +Z — theta 0 places camera on that axis. */
+function createPointSeeds(count) {
+  const seeds = new Float32Array(count);
+  for (let i = 0; i < count; i += 1) {
+    const noise = Math.sin(i * 4.1414 + 23.42) * 9721.173;
+    seeds[i] = noise - Math.floor(noise);
+  }
+  return seeds;
+}
+
 const DEFAULT_ORBIT_THETA = 0;
-/** ~1.24 rad ≈ 18° above horizon at the look target — front elevation, not top-down. */
-const DEFAULT_ORBIT_PHI = 1.24;
-/** Ignore forecourt ground when framing so the cathedral fills the viewport vertically. */
+const DEFAULT_ORBIT_PHI = 1.22;
 const FRAMING_Y_MIN = Math.max(MONUMENT_BOUNDS.min[1], -0.15);
 const FRAMING_Y_MAX = MONUMENT_BOUNDS.max[1];
 const FRAMING_HEIGHT = FRAMING_Y_MAX - FRAMING_Y_MIN;
-/** Slightly below geometric center so the silhouette sits centered, not bottom-heavy. */
-const FRAMING_CENTER_Y = MONUMENT_BOUNDS.center[1] - MONUMENT_BOUNDS.size[1] * 0.025;
-/** Nudge projection upward in the canvas (fraction of viewport height). */
+const FRAMING_CENTER_Y = MONUMENT_BOUNDS.center[1] - MONUMENT_BOUNDS.size[1] * 0.02;
 const VIEW_OFFSET_Y = 0.03;
 
 const TimescapeCanvas = forwardRef(function TimescapeCanvas(
@@ -94,21 +126,22 @@ const TimescapeCanvas = forwardRef(function TimescapeCanvas(
     renderer.setClearColor(0x000000, 0);
 
     const scene = new THREE.Scene();
+    scene.fog = new THREE.Fog(0x080808, 16, 42);
 
-    const camera = new THREE.PerspectiveCamera(42, 1, 0.01, 80);
+    const camera = new THREE.PerspectiveCamera(40, 1, 0.01, 80);
     const lookTarget = new THREE.Vector3(
       MONUMENT_BOUNDS.center[0],
       FRAMING_CENTER_Y,
       MONUMENT_BOUNDS.center[2]
     );
     const monumentSize = new THREE.Vector3(...MONUMENT_BOUNDS.size);
-    const fitPadding = 1.42;
+    const fitPadding = 1.38;
 
     function getOrbitDistance(aspect) {
       const fovRad = THREE.Math.degToRad(camera.fov);
       const fitHeight = (FRAMING_HEIGHT * fitPadding) / (2 * Math.tan(fovRad / 2));
       const fitWidth = (monumentSize.x * fitPadding) / (2 * Math.tan(fovRad / 2) * aspect);
-      return Math.max(fitHeight, fitWidth, monumentSize.z * fitPadding + 2);
+      return Math.max(fitHeight, fitWidth, monumentSize.z * fitPadding + 1.2);
     }
 
     let orbitDistance = getOrbitDistance(1);
@@ -120,23 +153,25 @@ const TimescapeCanvas = forwardRef(function TimescapeCanvas(
     const geometry = new THREE.BufferGeometry();
     geometry.addAttribute('position', new THREE.BufferAttribute(workingPositions, 3));
     geometry.addAttribute('size', new THREE.BufferAttribute(createPointSizes(POINT_COUNT), 1));
+    geometry.addAttribute('seed', new THREE.BufferAttribute(createPointSeeds(POINT_COUNT), 1));
 
     const tint = new THREE.Vector3(...ERA_COLORS[0]);
     const material = new THREE.ShaderMaterial({
       uniforms: {
         tint: { value: tint },
-        morphMix: { value: 0 },
+        morphMix: { value: 1 },
         pointScale: { value: 1 },
       },
       vertexShader: VERTEX_SHADER,
       fragmentShader: FRAGMENT_SHADER,
       transparent: true,
       depthWrite: true,
+      depthTest: true,
       blending: THREE.NormalBlending,
     });
 
-    const points = new THREE.Points(geometry, material);
-    monumentGroup.add(points);
+    const scan = new THREE.Points(geometry, material);
+    monumentGroup.add(scan);
 
     const clock = new THREE.Clock();
     let orbitTheta = DEFAULT_ORBIT_THETA;
@@ -170,7 +205,7 @@ const TimescapeCanvas = forwardRef(function TimescapeCanvas(
         height
       );
       camera.updateProjectionMatrix();
-      material.uniforms.pointScale.value = Math.max(Math.min(width, height) / 460, 0.58);
+      material.uniforms.pointScale.value = Math.max(Math.min(width, height) / 360, 0.76);
       updateCamera();
     }
 
@@ -190,6 +225,7 @@ const TimescapeCanvas = forwardRef(function TimescapeCanvas(
       autoRotate = false;
       lastPointerX = event.clientX;
       lastPointerY = event.clientY;
+      container.setPointerCapture?.(event.pointerId);
     }
 
     function onPointerMove(event) {
@@ -197,30 +233,32 @@ const TimescapeCanvas = forwardRef(function TimescapeCanvas(
       const dx = event.clientX - lastPointerX;
       const dy = event.clientY - lastPointerY;
       orbitTheta -= dx * 0.005;
-      orbitPhi = Math.max(0.15, Math.min(1.35, orbitPhi + dy * 0.004));
+      orbitPhi = Math.max(0.2, Math.min(1.38, orbitPhi + dy * 0.004));
       lastPointerX = event.clientX;
       lastPointerY = event.clientY;
       updateCamera();
     }
 
-    function onPointerUp() {
+    function onPointerUp(event) {
       isDragging = false;
+      container.releasePointerCapture?.(event.pointerId);
       autoRotateTimeout = window.setTimeout(() => {
         autoRotate = true;
-      }, 4000);
+      }, 4200);
     }
 
     function onWheel(event) {
       event.preventDefault();
       autoRotate = false;
+      const baseDistance = getOrbitDistance(camera.aspect);
       orbitDistance = Math.max(
-        getOrbitDistance(camera.aspect) * 0.65,
-        Math.min(getOrbitDistance(camera.aspect) * 2.4, orbitDistance + event.deltaY * 0.004)
+        baseDistance * 0.68,
+        Math.min(baseDistance * 2.25, orbitDistance + event.deltaY * 0.004)
       );
       updateCamera();
       autoRotateTimeout = window.setTimeout(() => {
         autoRotate = true;
-      }, 4000);
+      }, 4200);
     }
 
     container.appendChild(renderer.domElement);
@@ -258,11 +296,11 @@ const TimescapeCanvas = forwardRef(function TimescapeCanvas(
       material.uniforms.tint.value.copy(tint);
 
       if (autoRotate && !isDragging) {
-        orbitTheta += 0.0018;
+        orbitTheta += 0.0011;
         updateCamera();
       }
 
-      monumentGroup.rotation.y = Math.sin(elapsed * 0.15) * 0.015;
+      monumentGroup.rotation.y = Math.sin(elapsed * 0.12) * 0.008;
       renderer.render(scene, camera);
       frameId = window.requestAnimationFrame(renderLoop);
     };
@@ -292,7 +330,7 @@ const TimescapeCanvas = forwardRef(function TimescapeCanvas(
       ref={rootRef}
       className="timescape-canvas"
       role="img"
-      aria-label="Interactive point cloud monument morphing across historical eras"
+      aria-label="Interactive 3D point-cloud scan of Mozart Wohnhaus across historical eras"
     />
   );
 });
