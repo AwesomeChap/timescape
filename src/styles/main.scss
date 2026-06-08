@@ -1,0 +1,92 @@
+@use 'breakpoints' as *;
+@use 'heading';
+@use 'layout';
+@use 'chrome';
+@use 'timescape';
+
+:root {
+  --pixel-mesh-gap: 3px;
+  --page-top-chrome: calc(20 * var(--pixel-mesh-gap));
+  --page-bottom-chrome: calc(31 * var(--pixel-mesh-gap));
+  --page-inner-section-gap: calc(16 * var(--pixel-mesh-gap));
+  --desktop-edge-inset: 20px;
+  --page-body-font-size: 14px;
+  --page-body-line-height: 1.72;
+  --page-body-letter-spacing: -0.01em;
+  --page-body-color: rgba(221, 221, 221, 0.9);
+}
+
+@include tablet-up {
+  :root {
+    --page-inner-section-gap: calc(24 * var(--pixel-mesh-gap));
+    --page-body-font-size: 16px;
+  }
+}
+
+@include desktop-up {
+  :root {
+    --page-inner-section-gap: 8rem;
+    --page-body-line-height: 1.9;
+    --page-body-letter-spacing: 0.008em;
+  }
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  height: 100%;
+  overflow: hidden;
+  font-size: 16px;
+}
+
+html,
+body {
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  -webkit-tap-highlight-color: transparent;
+}
+
+body {
+  height: 100%;
+  overflow: hidden;
+  background-color: #0e0e0e;
+  color: #ccc;
+  font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+  font-weight: 300;
+  -webkit-font-smoothing: antialiased;
+}
+
+#root {
+  height: 100%;
+  height: 100dvh;
+  overflow-x: hidden;
+  overflow-y: auto;
+  overscroll-behavior-y: contain;
+  -webkit-overflow-scrolling: touch;
+  touch-action: pan-y;
+}
+
+.app-shell {
+  min-height: min(100%, 100dvh);
+  position: relative;
+}
+
+.app-content-layer {
+  position: relative;
+  z-index: 1;
+}
+
+a {
+  text-decoration: none;
+}
+
+a:focus-visible,
+button:focus-visible {
+  outline: 2px solid #ff0d2d;
+  outline-offset: 2px;
+}

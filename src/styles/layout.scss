@@ -1,0 +1,111 @@
+@use 'breakpoints' as *;
+
+.section {
+  height: auto;
+  max-height: none;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  box-sizing: border-box;
+  margin-top: 0;
+}
+
+.section:has(> .inner-section) {
+  gap: var(--page-inner-section-gap);
+  padding-top: calc(
+    var(--page-top-chrome) + 4 * var(--pixel-mesh-gap) + env(safe-area-inset-top, 0px)
+  );
+  padding-bottom: calc(var(--page-inner-section-gap) + env(safe-area-inset-bottom, 0px));
+}
+
+.section-timescape {
+  position: relative;
+
+  .text {
+    font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+    font-weight: 300;
+    text-align: left;
+    font-size: var(--page-body-font-size);
+    line-height: var(--page-body-line-height);
+    letter-spacing: var(--page-body-letter-spacing);
+    color: var(--page-body-color);
+    overflow-wrap: anywhere;
+    word-break: break-word;
+  }
+
+  .text p {
+    margin: 0;
+  }
+}
+
+.inner-section {
+  padding: 0;
+  width: 88%;
+}
+
+.sub-section {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: space-between;
+}
+
+.timescape-page__hero {
+  width: 100%;
+}
+
+.image-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  order: 2;
+  position: relative;
+  flex-shrink: 0;
+  height: auto;
+  margin-top: 1.5rem;
+  margin-bottom: 0;
+
+  .image {
+    position: relative;
+    width: min(76vw, 320px);
+    aspect-ratio: 1 / 1;
+    border-radius: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0;
+    transform: none;
+    background: transparent;
+    box-shadow: none;
+    transition: none;
+    overflow: hidden;
+  }
+}
+
+@include tablet-up {
+  .section:has(> .inner-section) {
+    padding-top: calc(var(--page-inner-section-gap) + env(safe-area-inset-top, 0px));
+    padding-bottom: calc(var(--page-inner-section-gap) + env(safe-area-inset-bottom, 0px));
+  }
+
+  .inner-section {
+    width: 78%;
+  }
+
+  .image-container .image {
+    width: min(56vw, 360px);
+    padding: 0;
+  }
+}
+
+@include desktop-up {
+  .inner-section {
+    width: min(78%, 1120px);
+  }
+
+  .sub-section {
+    flex-direction: row;
+  }
+}

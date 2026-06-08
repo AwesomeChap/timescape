@@ -1,0 +1,395 @@
+@use 'colors' as *;
+@use 'breakpoints' as *;
+
+$mesh: var(--pixel-mesh-gap, 3px);
+$mesh-gap-4: calc(4 * #{$mesh});
+$mesh-gap-8: calc(8 * #{$mesh});
+$timescape-copy-gap: calc(16 * #{$mesh});
+
+.timescape-page {
+  width: 100%;
+  box-sizing: border-box;
+  background: transparent;
+}
+
+.timescape-page__copy-column {
+  display: contents;
+}
+
+.timescape-page__intro {
+  order: 1;
+  width: 100%;
+  pointer-events: none;
+}
+
+.timescape-page__details {
+  order: 3;
+  width: 100%;
+}
+
+@media only screen and (max-width: 1023px) {
+  .timescape-page__details {
+    margin-top: calc(10 * #{$mesh});
+  }
+}
+
+.timescape-page__visual {
+  order: 2;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  gap: $mesh-gap-8;
+  margin-top: 0;
+}
+
+.timescape-page__intro,
+.timescape-page__details {
+  min-width: 0;
+}
+
+.timescape-page__intro .page-heading--stacked {
+  margin-bottom: calc(6 * #{$mesh});
+}
+
+.timescape-page__era-heading {
+  margin-bottom: calc(6 * #{$mesh});
+
+  &.page-heading--block .heading-block {
+    margin-bottom: 0;
+  }
+}
+
+@include tablet-up {
+  .timescape-page__era-heading {
+    &.page-heading--stacked .heading-stack__title {
+      font-size: clamp(1.65rem, 2.6vw, 2rem);
+    }
+
+    &.page-heading--block {
+      .heading-block {
+        margin-bottom: calc(10 * #{$mesh});
+      }
+
+      .heading {
+        font-size: clamp(1.65rem, 2.6vw, 2rem);
+      }
+
+      .sub-heading {
+        font-size: 0.88rem;
+      }
+    }
+  }
+}
+
+@include desktop-up {
+  .timescape-page__era-heading {
+    &.page-heading--stacked .heading-stack__title {
+      font-size: clamp(1.75rem, 2.8vw, 2.25rem);
+    }
+
+    &.page-heading--block .heading {
+      font-size: clamp(1.75rem, 2.8vw, 2.25rem);
+    }
+  }
+}
+
+.timescape-page__monument {
+  margin: 0;
+}
+
+.timescape-page__location {
+  display: block;
+  margin-top: calc(2 * #{$mesh});
+  color: rgba(221, 221, 221, 0.48);
+}
+
+.timescape-page__era .text {
+  margin: 0;
+  color: rgba(221, 221, 221, 0.72);
+}
+
+.timescape-page__stage {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+
+.timescape-page__model {
+  display: flex;
+  flex-direction: column;
+  gap: calc(3 * #{$mesh});
+  width: 100%;
+}
+
+.timescape-page__stage-controls {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: calc(4 * #{$mesh});
+  width: 100%;
+}
+
+.timescape-page__canvas-shell {
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  border-radius: 0;
+}
+
+.timescape-page__stage-hint {
+  margin: 0;
+  font-size: 0.68rem;
+  font-weight: 300;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(221, 221, 221, 0.38);
+  text-align: left;
+  flex: 1;
+  min-width: 0;
+}
+
+.timescape-page__reset-view {
+  flex-shrink: 0;
+  margin: 0;
+  padding: calc(2 * #{$mesh}) calc(3 * #{$mesh});
+  border: 1px solid rgba(221, 221, 221, 0.22);
+  border-radius: 0;
+  background: rgba(10, 10, 10, 0.72);
+  color: rgba(221, 221, 221, 0.72);
+  font-family: Futura, sans-serif;
+  font-size: 0.62rem;
+  font-weight: 300;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition:
+    color 0.2s ease,
+    border-color 0.2s ease,
+    background 0.2s ease;
+
+  &:hover,
+  &:focus-visible {
+    color: rgba(221, 221, 221, 0.92);
+    border-color: rgba(221, 221, 221, 0.42);
+    background: rgba(10, 10, 10, 0.88);
+    outline: none;
+  }
+}
+
+.timescape-canvas {
+  position: absolute;
+  inset: 0;
+  cursor: grab;
+  touch-action: none;
+
+  &:active {
+    cursor: grabbing;
+  }
+
+  canvas {
+    display: block;
+    width: 100% !important;
+    height: 100% !important;
+  }
+}
+
+.timescape-timeline {
+  width: 100%;
+  padding: calc(2 * #{$mesh}) 0 calc(2 * #{$mesh});
+  --timeline-stop-count: 3;
+  --timeline-rail-inset: calc(100% / (2 * var(--timeline-stop-count)));
+  --timeline-rail-height: calc(0.5 * #{$mesh});
+  --timeline-rail-muted: #3a3a3a;
+  --timeline-rail-active: #{$red-brand};
+}
+
+.timescape-timeline__control {
+  position: relative;
+  --timeline-dot-size: calc(6 * #{$mesh});
+  padding-bottom: calc(2 * #{$mesh});
+}
+
+.timescape-timeline__track-fill {
+  position: absolute;
+  top: calc(4 * #{$mesh});
+  left: var(--timeline-rail-inset);
+  height: var(--timeline-rail-height);
+  width: 0;
+  background: var(--timeline-rail-active);
+  opacity: 1;
+  pointer-events: none;
+  z-index: 1;
+  transform: translateY(-50%);
+  transition: none;
+  will-change: width;
+}
+
+.timescape-timeline__control::before {
+  content: '';
+  position: absolute;
+  top: calc(4 * #{$mesh});
+  left: var(--timeline-rail-inset);
+  right: var(--timeline-rail-inset);
+  height: var(--timeline-rail-height);
+  background: var(--timeline-rail-muted);
+  opacity: 1;
+  z-index: 0;
+  transform: translateY(-50%);
+  pointer-events: none;
+}
+
+.timescape-timeline__stops {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(var(--timeline-stop-count), 1fr);
+  pointer-events: none;
+}
+
+.timescape-timeline__stop {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: calc(4 * #{$mesh});
+  width: 100%;
+  pointer-events: none;
+  color: rgba(221, 221, 221, 0.52);
+  transition: color 0.2s ease;
+
+  &--active {
+    color: rgba(221, 221, 221, 0.92);
+  }
+}
+
+.timescape-timeline__dot-button {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: calc(12 * #{$mesh});
+  height: calc(12 * #{$mesh});
+  margin-top: calc(4 * #{$mesh} - 6 * #{$mesh});
+  padding: 0;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  pointer-events: auto;
+
+  &:hover + .timescape-timeline__year,
+  &:focus-visible + .timescape-timeline__year {
+    color: rgba(221, 221, 221, 0.72);
+  }
+
+  &:focus-visible {
+    outline: none;
+  }
+
+  &:focus-visible .timescape-timeline__dot::after {
+    box-shadow: 0 0 0 1px rgba(221, 221, 221, 0.45);
+  }
+}
+
+.timescape-timeline__year {
+  font-family: Futura, sans-serif;
+  font-size: 0.95rem;
+  letter-spacing: 0.05em;
+  font-variant-numeric: tabular-nums;
+  line-height: 1.1;
+  pointer-events: none;
+  user-select: none;
+}
+
+.timescape-timeline__dot {
+  position: relative;
+  display: block;
+  width: var(--timeline-dot-size);
+  height: var(--timeline-dot-size);
+  background: transparent;
+  border: none;
+  opacity: 1;
+  pointer-events: none;
+
+  &::after {
+    content: '';
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: calc(4 * #{$mesh});
+    height: calc(4 * #{$mesh});
+    border-radius: 50%;
+    background: var(--timeline-rail-muted);
+    transform: translate(-50%, -50%);
+    transition:
+      width 0.25s ease,
+      height 0.25s ease,
+      background 0.25s ease;
+  }
+
+  .timescape-timeline__stop--visited &::after {
+    background: var(--timeline-rail-active);
+  }
+
+  .timescape-timeline__stop--active &::after {
+    width: var(--timeline-dot-size);
+    height: var(--timeline-dot-size);
+    background: var(--timeline-rail-active);
+  }
+}
+
+@media only screen and (max-width: 1023px) {
+  .timescape-page .image-container.timescape-page__visual {
+    margin-top: calc(5 * #{$mesh});
+    align-items: stretch;
+  }
+
+  .timescape-page .timescape-page__canvas-shell.image {
+    width: 100vw;
+    max-width: 100vw;
+    margin-left: calc(50% - 50vw);
+    margin-right: calc(50% - 50vw);
+    aspect-ratio: 1 / 1;
+    height: auto;
+  }
+}
+
+@include desktop-up {
+  .timescape-page.section:has(> .inner-section) {
+    min-height: calc(100dvh - var(--page-top-chrome));
+  }
+
+  .timescape-page > .inner-section:first-child {
+    display: grid;
+    align-content: center;
+    min-height: calc(100dvh - var(--page-top-chrome) - 12vw);
+  }
+
+  .timescape-page__copy-column {
+    display: flex;
+    flex-direction: column;
+    gap: $timescape-copy-gap;
+    width: 50%;
+    order: 1;
+  }
+
+  .timescape-page__intro,
+  .timescape-page__details {
+    order: unset;
+    width: auto;
+  }
+
+  .timescape-page .image-container.timescape-page__visual {
+    width: 40%;
+    order: 2;
+    margin-top: 0;
+  }
+
+  .timescape-page .timescape-page__canvas-shell.image {
+    width: min(100%, 28rem);
+    max-height: min(48vh, 28rem);
+    aspect-ratio: 1 / 1;
+    height: auto;
+    border-radius: 0;
+  }
+}

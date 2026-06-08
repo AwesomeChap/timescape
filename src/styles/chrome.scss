@@ -1,0 +1,39 @@
+@use 'breakpoints' as *;
+
+.site-chrome {
+  position: fixed;
+  top: 0;
+  left: 50%;
+  z-index: 6;
+  display: flex;
+  align-items: center;
+  width: min(100%, 2000px);
+  height: 60px;
+  padding: 10px var(--desktop-edge-inset) 0;
+  box-sizing: border-box;
+  transform: translateX(-50%);
+  pointer-events: none;
+}
+
+.site-chrome__logo {
+  display: inline-flex;
+  align-items: center;
+  height: 100%;
+  padding: 5px 0;
+  box-sizing: border-box;
+  line-height: 0;
+  pointer-events: auto;
+}
+
+.site-chrome__logo-img {
+  display: block;
+  height: 100%;
+  width: auto;
+}
+
+@include tablet-up {
+  .site-chrome {
+    padding-left: var(--desktop-edge-inset);
+    padding-right: var(--desktop-edge-inset);
+  }
+}

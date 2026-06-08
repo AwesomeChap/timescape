@@ -1,0 +1,23 @@
+{
+  "name": "timescape",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Interactive 3D point-cloud monument morph across historical eras",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "author": "Jatin Kumar",
+  "license": "MIT",
+  "dependencies": {
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "three": "^0.103.0"
+  },
+  "devDependencies": {
+    "sass": "^1.93.2",
+    "vite": "^7.1.7"
+  }
+}
