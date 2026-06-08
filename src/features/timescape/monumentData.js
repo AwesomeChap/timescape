@@ -8,6 +8,7 @@
  */
 
 import { easeInOutCubic } from './timescapeMeta';
+import { ERA_COLORS, ERA_POINT_KEYS } from './eras';
 export { easeInOutCubic } from './timescapeMeta';
 
 const DENSITY = 2.25;
@@ -376,20 +377,9 @@ function flatten(key) {
   return buf;
 }
 
-/** Per-era RGB tint (0–1) — index order matches TIMELINE_ERAS. */
-export const ERA_COLORS = [
-  [0.54, 0.44, 0.33],   // 1617 — old sandstone
-  [0.65, 0.55, 0.42],   // 1773 — warm baroque plaster
-  [0.32, 0.28, 0.25],   // 1944 — rubble and ash
-  [0.78, 0.67, 0.50],   // 1996 — fresh reconstruction cream
-];
+export { ERA_COLORS };
 
-export const ERA_POSITIONS = [
-  flatten('era1617'),
-  flatten('era1773'),
-  flatten('era1944'),
-  flatten('era1996'),
-];
+export const ERA_POSITIONS = ERA_POINT_KEYS.map((key) => flatten(key));
 
 export const POINT_COUNT = POINT_SLOTS.length;
 
