@@ -9,6 +9,7 @@
 
 import { easeInOutCubic } from './timescapeMeta';
 import { ERA_COLORS, ERA_POINT_KEYS } from './eras';
+import { addEra1996PointDetails } from './eras/era1996';
 export { easeInOutCubic } from './timescapeMeta';
 
 const DENSITY = 2.25;
@@ -27,6 +28,10 @@ function scatter(p, drop, s) {
     p[1] - drop - hash(s + 1) * 0.45,
     p[2] + (hash(s + 2) - 0.5) * 0.75,
   ];
+}
+
+function hiddenToPresent(p) {
+  return [[...HIDDEN], [...HIDDEN], [...HIDDEN], p];
 }
 
 // ─── Building dimensions ────────────────────────────────────────────────────
@@ -359,6 +364,17 @@ function buildSlots() {
       }
     }
   }
+
+  const seedRef = { current: seed };
+  addEra1996PointDetails({
+    dimensions: { D, FULL_MIN_X, H, ROOF_H, W },
+    hash,
+    hiddenToPresent,
+    push4,
+    seedRef,
+    steps,
+  });
+  seed = seedRef.current;
 
   return slots;
 }
