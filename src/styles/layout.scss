@@ -95,8 +95,12 @@
   }
 
   .image-container .image {
-    width: min(56vw, 360px);
+    width: min(72vw, 480px);
     padding: 0;
+  }
+
+  .timescape-page .image-container .image {
+    width: min(72vw, 480px);
   }
 }
 

@@ -1,30 +1,44 @@
 export const MONUMENT = {
-  name: 'Salzburg Cathedral',
-  location: 'Domplatz, Salzburg, Austria',
+  name: "Mozart's Wohnhaus",
+  location: 'Makartplatz, Salzburg, Austria',
 };
 
 /** Discrete timeline stops — present → past (left to right). */
 export const TIMELINE_ERAS = [
   {
-    id: 'present',
-    year: 2024,
+    id: 'era1994',
+    year: 1994,
     label: 'Present day',
     description:
-      'The same Baroque cathedral as before the war, plus Domplatz visitor pavilion, crypt canopy, glazed connector, kiosk, and forecourt railings.',
+      'Fully restored salmon-pink residence with shuttered windows, basement slits, stone arched portal, dormered shingle roof, and planters along Makartplatz.',
   },
   {
-    id: 'post-war',
-    year: 1945,
-    label: 'After the air raid',
+    id: 'era1952',
+    year: 1952,
+    label: 'Insurance office',
     description:
-      'On 16 October 1944 a bomb pierced the crossing dome. The vault caved inward, burying the choir under timber and stone.',
+      'Two-thirds of the bombed house was sold to an insurance company. The brown-grey surviving third — with arched shopfronts and a hedge — remained on the left; a five-storey beige office block rose on the right.',
   },
   {
-    id: 'pre-war',
-    year: 1938,
-    label: 'Before the war',
+    id: 'era1944',
+    year: 1944,
+    label: 'Bombing aftermath',
     description:
-      'Early Baroque cathedral by Santino Solari — twin west towers, copper crossing dome, triple portal, and Domplatz forecourt.',
+      'An air raid destroyed roughly two-thirds of the house. The surviving third on the left still stood; the right two-thirds collapsed into a settled rubble mound.',
+  },
+  {
+    id: 'era1685',
+    year: 1685,
+    label: 'Merged residence',
+    description:
+      'Two original town houses were combined into one long Mozart family residence — tall shuttered windows, a shop awning, arched shopfronts, ridge chimneys, and a continuous hipped roof.',
+  },
+  {
+    id: 'era1617',
+    year: 1617,
+    label: 'Twin houses',
+    description:
+      'Before the merger, two separate Baroque town houses stood side by side on the plot — the earliest chapter of the site.',
   },
 ];
 

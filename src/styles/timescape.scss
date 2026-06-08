@@ -197,7 +197,7 @@ $timescape-copy-gap: calc(16 * #{$mesh});
 .timescape-timeline {
   width: 100%;
   padding: calc(2 * #{$mesh}) 0 calc(2 * #{$mesh});
-  --timeline-stop-count: 3;
+  --timeline-stop-count: 5;
   --timeline-rail-inset: calc(100% / (2 * var(--timeline-stop-count)));
   --timeline-rail-height: calc(0.5 * #{$mesh});
   --timeline-rail-muted: #3a3a3a;
@@ -349,7 +349,7 @@ $timescape-copy-gap: calc(16 * #{$mesh});
     max-width: 100vw;
     margin-left: calc(50% - 50vw);
     margin-right: calc(50% - 50vw);
-    aspect-ratio: 1 / 1;
+    aspect-ratio: 8 / 5;
     height: auto;
   }
 }
@@ -380,15 +380,14 @@ $timescape-copy-gap: calc(16 * #{$mesh});
   }
 
   .timescape-page .image-container.timescape-page__visual {
-    width: 40%;
+    width: 58%;
     order: 2;
     margin-top: 0;
   }
 
   .timescape-page .timescape-page__canvas-shell.image {
-    width: min(100%, 28rem);
-    max-height: min(48vh, 28rem);
-    aspect-ratio: 1 / 1;
+    width: min(100%, 42rem);
+    aspect-ratio: 8 / 5;
     height: auto;
     border-radius: 0;
   }

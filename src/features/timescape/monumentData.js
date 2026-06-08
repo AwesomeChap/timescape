@@ -1,24 +1,66 @@
 /**
- * Procedural point-cloud Salzburger Dom for Timescape demo.
- * Inspired by Salzburg Cathedral — consecrated 1628, dome collapsed 16 Oct 1944,
- * reconsecrated May 1959. Each era shares point count/order for coherent morphs.
+ * Procedural point-cloud Mozart's Wohnhaus — five correlated eras for morphing.
+ * Facade faces +Z (Makartplatz). Shared footprint FULL_W across all eras.
+ * Left 1/3 survivor wing (1952 + 1944). Right 2/3: office (1952) / rubble (1944).
+ * 1617 twin houses span the same total width as the merged 1685+ residence.
  */
 
 import { easeInOutCubic } from './timescapeMeta';
 
 export { easeInOutCubic } from './timescapeMeta';
 
-/** Grid multiplier for procedural sampling — higher = denser point cloud. */
-const POINT_DENSITY = 3;
+const ERA_KEYS = ['era1994', 'era1952', 'era1944', 'era1685', 'era1617'];
+/** Surface-only sampling — no interior fill. */
+const POINT_DENSITY = 2.1;
+const HIDDEN = [0, -8, 0];
+
+const FULL_W = 6.4;
+/** Shared vertical split — left 1/3 survivor | right 2/3 office/rubble. */
+const SURVIVOR_W = FULL_W / 3;
+const MAIN_W = FULL_W * (2 / 3);
+const SPLIT_X = -FULL_W / 2 + SURVIVOR_W;
+const SURVIVOR_CX = -FULL_W / 2 + SURVIVOR_W / 2;
+const MAIN_CX = SPLIT_X + MAIN_W / 2;
+const FULL_CX = 0;
+const DEPTH = 2.8;
+
+/** Twin gap between the two 1617 houses — combined span still equals FULL_W. */
+const TWIN_GAP = 0.36;
+const TWIN_W = (FULL_W - TWIN_GAP) / 2;
+const TWIN_A_CX = -FULL_W / 2 + TWIN_W / 2;
+const TWIN_B_CX = FULL_W / 2 - TWIN_W / 2;
+
+const GY = -1.1;
+const EAVE = 0.48;
+const ROOF_RISE = 0.82;
+const FRONT = DEPTH / 2 + 0.04;
+const OFFICE_TOP = GY + 2.85;
+const FLOOR_H = 0.52;
+
+const PALETTE = {
+  historic: [[0.96, 0.84, 0.78], [0.52, 0.48, 0.42], [0.50, 0.46, 0.42], [0.78, 0.72, 0.64], [0.74, 0.68, 0.62]],
+  historicB: [[0.96, 0.84, 0.78], [0.52, 0.48, 0.42], [0.50, 0.46, 0.42], [0.78, 0.72, 0.64], [0.68, 0.62, 0.56]],
+  office: [[0.94, 0.92, 0.90], [0.90, 0.86, 0.74], [0.40, 0.36, 0.32], [0.78, 0.72, 0.64], [0.74, 0.68, 0.62]],
+  officeGlass: [[0.70, 0.78, 0.86], [0.65, 0.74, 0.84], [0.40, 0.36, 0.32], [0.78, 0.72, 0.64], [0.74, 0.68, 0.62]],
+  rubble: [[0.45, 0.40, 0.36], [0.45, 0.40, 0.36], [0.36, 0.30, 0.26], [0.45, 0.40, 0.36], [0.45, 0.40, 0.36]],
+  timber: [[0.30, 0.24, 0.18], [0.30, 0.24, 0.18], [0.28, 0.22, 0.16], [0.30, 0.24, 0.18], [0.30, 0.24, 0.18]],
+  roof: [[0.26, 0.24, 0.22], [0.78, 0.76, 0.72], [0.24, 0.22, 0.20], [0.22, 0.20, 0.18], [0.24, 0.22, 0.20]],
+  roofSurvivor: [[0.26, 0.24, 0.22], [0.30, 0.28, 0.26], [0.24, 0.22, 0.20], [0.22, 0.20, 0.18], [0.24, 0.22, 0.20]],
+  frame: [[0.96, 0.96, 0.94], [0.92, 0.90, 0.86], [0.80, 0.76, 0.72], [0.92, 0.88, 0.84], [0.90, 0.86, 0.82]],
+  glass: [[0.22, 0.30, 0.40], [0.20, 0.28, 0.38], [0.15, 0.18, 0.22], [0.20, 0.28, 0.38], [0.20, 0.28, 0.38]],
+  stone: [[0.82, 0.80, 0.76], [0.82, 0.80, 0.76], [0.65, 0.62, 0.58], [0.80, 0.78, 0.74], [0.80, 0.78, 0.74]],
+  ground: [[0.50, 0.48, 0.46], [0.52, 0.50, 0.46], [0.44, 0.40, 0.36], [0.52, 0.50, 0.46], [0.52, 0.50, 0.46]],
+  cobble: [[0.58, 0.56, 0.52], [0.58, 0.56, 0.52], [0.50, 0.46, 0.42], [0.58, 0.56, 0.52], [0.58, 0.56, 0.52]],
+  hedge: [[0.28, 0.46, 0.24], [0.28, 0.46, 0.24], [0.28, 0.46, 0.24], [0.28, 0.46, 0.24], [0.28, 0.46, 0.24]],
+  detail: [[0.90, 0.88, 0.86], [0.68, 0.64, 0.60], [0.42, 0.38, 0.34], [0.58, 0.54, 0.50], [0.56, 0.52, 0.48]],
+  plant: [[0.26, 0.50, 0.22], [0.26, 0.50, 0.22], [0.26, 0.50, 0.22], [0.26, 0.50, 0.22], [0.26, 0.50, 0.22]],
+  shutter: [[0.72, 0.76, 0.80], [0.68, 0.72, 0.76], [0.55, 0.58, 0.62], [0.70, 0.74, 0.78], [0.68, 0.72, 0.76]],
+  moulding: [[0.48, 0.44, 0.40], [0.48, 0.44, 0.40], [0.38, 0.34, 0.30], [0.48, 0.44, 0.40], [0.48, 0.44, 0.40]],
+  door: [[0.32, 0.22, 0.16], [0.32, 0.22, 0.16], [0.22, 0.18, 0.15], [0.34, 0.24, 0.18], [0.34, 0.24, 0.18]],
+};
 
 function scaleSteps(steps) {
   return Math.max(1, Math.round(steps * POINT_DENSITY));
-}
-
-const HIDDEN = [0, -8, 0];
-
-function pushSlot(slots, preWar, postWar, present) {
-  slots.push({ preWar, postWar, present });
 }
 
 function hash(seed) {
@@ -26,39 +68,121 @@ function hash(seed) {
   return x - Math.floor(x);
 }
 
-function scatterDownward(point, amount, seed) {
-  const jitter = 0.22 + hash(seed) * 0.18;
-  return [
-    point[0] + (hash(seed + 1) - 0.5) * jitter,
-    point[1] - amount - hash(seed + 2) * 0.12,
-    point[2] + (hash(seed + 3) - 0.5) * jitter,
-  ];
+function isHidden(p) {
+  return p === HIDDEN || (Array.isArray(p) && p[1] < -4);
 }
 
-function pushPresentOnly(slots, points) {
-  points.forEach((p) => {
-    pushSlot(slots, HIDDEN, HIDDEN, [...p]);
+function zoneColor(zone, eraIndex) {
+  return PALETTE[zone][eraIndex];
+}
+
+function pushSlot(slots, zones, positions) {
+  const zoneList = Array.isArray(zones) ? zones : [zones, zones, zones, zones, zones];
+  const slot = {};
+  ERA_KEYS.forEach((key, i) => {
+    const p = positions[i];
+    if (isHidden(p)) {
+      slot[key] = { p: HIDDEN, c: [0, 0, 0] };
+    } else {
+      slot[key] = { p: [...p], c: [...zoneColor(zoneList[i], i)] };
+    }
   });
+  slots.push(slot);
 }
 
-function pushSharedIntact(slots, point, postPoint) {
-  pushSlot(slots, [...point], postPoint, [...point]);
+function applyFacadeCurve(p) {
+  const t = p[0] / (FULL_W * 0.5);
+  return [p[0], p[1], p[2] + t * 0.06];
 }
 
-function fillBox(out, cx, cy, cz, sx, sy, sz, nx, ny, nz) {
-  const ixMax = scaleSteps(nx);
-  const iyMax = scaleSteps(ny);
-  const izMax = scaleSteps(nz);
+function shiftX(point, dx) {
+  return [point[0] + dx, point[1], point[2]];
+}
 
-  for (let ix = 0; ix <= ixMax; ix += 1) {
-    for (let iy = 0; iy <= iyMax; iy += 1) {
-      for (let iz = 0; iz <= izMax; iz += 1) {
-        out.push([
-          cx + (ix / ixMax - 0.5) * sx,
-          cy + (iy / iyMax - 0.5) * sy,
-          cz + (iz / izMax - 0.5) * sz,
-        ]);
-      }
+function scaleYToHeight(point, fromTop, toTop, baseY) {
+  const rel = (point[1] - baseY) / (fromTop - baseY);
+  return [point[0], baseY + rel * (toTop - baseY), point[2]];
+}
+
+function inTwinGap(x) {
+  return Math.abs(x) < TWIN_GAP / 2;
+}
+
+function sampleLine(out, x0, y0, z0, x1, y1, z1, steps) {
+  const n = scaleSteps(steps);
+  for (let i = 0; i <= n; i += 1) {
+    const t = i / n;
+    out.push([x0 + (x1 - x0) * t, y0 + (y1 - y0) * t, z0 + (z1 - z0) * t]);
+  }
+}
+
+/** 1944 rubble field — timber nest + masonry + dust (reference: 1944 Makartplatz photo). */
+function buildRuinPile(rubble, timber, masonry, debris) {
+  const xMin = SPLIT_X + 0.08;
+  const xMax = FULL_W / 2 - 0.15;
+  const pileCx = (xMin + xMax) / 2;
+  const pileW = xMax - xMin;
+
+  for (let i = 0; i < 140; i += 1) {
+    const s = i * 13.7;
+    debris.push([
+      pileCx + (hash(s) - 0.5) * pileW * 0.96,
+      GY + 0.01 + hash(s + 1) * 0.1,
+      (hash(s + 2) - 0.5) * DEPTH * 0.9,
+    ]);
+  }
+
+  for (let chunk = 0; chunk < 22; chunk += 1) {
+    const s = chunk * 29.3;
+    const cx = pileCx + (hash(s) - 0.5) * pileW * 0.82;
+    const cy = GY + 0.12 + hash(s + 3) * 1.35;
+    const cz = (hash(s + 4) - 0.5) * DEPTH * 0.65;
+    const w = 0.18 + hash(s + 5) * 0.38;
+    fillBoxSurface(masonry, cx, cy, cz, w, 0.1 + hash(s + 6) * 0.22, w * 0.75, 'top', 3, 2);
+    fillBoxSurface(masonry, cx, cy, cz, w, 0.14, w * 0.65, 'front', 3, 2);
+  }
+
+  for (let beam = 0; beam < 62; beam += 1) {
+    const s = beam * 19.11 + 44;
+    const cx = pileCx + (hash(s) - 0.5) * pileW * 0.9;
+    const cy = GY + 0.2 + hash(s + 1) * 1.55;
+    const cz = (hash(s + 2) - 0.5) * DEPTH * 0.78;
+    const length = 0.5 + hash(s + 3) * 1.75;
+    const yaw = hash(s + 4) * Math.PI * 2;
+    const pitch = (hash(s + 5) - 0.5) * 1.1;
+    const dx = Math.cos(yaw) * length * 0.5;
+    const dy = Math.sin(pitch) * length * 0.38;
+    const dz = Math.sin(yaw) * length * 0.5;
+    sampleLine(
+      timber,
+      cx - dx,
+      cy - dy * 0.25,
+      cz - dz,
+      cx + dx,
+      cy + dy,
+      cz + dz,
+      4 + Math.floor(hash(s + 7) * 5)
+    );
+  }
+
+  for (let j = 0; j < 16; j += 1) {
+    const s = j * 37.2;
+    const bx = SPLIT_X + 0.12 + hash(s) * 0.75;
+    const by = GY + 0.25 + hash(s + 1) * 0.95;
+    const bz = (hash(s + 2) - 0.5) * 0.55;
+    const len = 0.85 + hash(s + 3) * 1.25;
+    sampleLine(timber, bx, by, bz, bx - 0.35 - hash(s) * 0.5, by + len, bz + 0.25, 7);
+    sampleLine(timber, bx, by, bz, bx + 0.15 + hash(s + 4) * 0.35, by + len * 0.9, bz - 0.2, 6);
+    sampleLine(timber, bx, by, bz, bx - 0.1, by + len * 0.7, bz + 0.45, 5);
+  }
+
+  for (let layer = 0; layer <= 11; layer += 1) {
+    const t = layer / 11;
+    const y = GY + 0.06 + t * 1.82;
+    const rw = pileW * (0.52 + (1 - t) * 0.44);
+    fillBoxSurface(rubble, pileCx, y, 0.14 + t * 0.12, rw, 0.1, DEPTH * 0.68 * (1 - t * 0.32), 'front', 13, 1);
+    if (layer % 2 === 0) {
+      fillBoxSurface(rubble, pileCx, y, 0.04, rw * 0.92, 0.08, DEPTH * 0.55 * (1 - t * 0.25), 'top', 11, 6);
     }
   }
 }
@@ -66,7 +190,6 @@ function fillBox(out, cx, cy, cz, sx, sy, sz, nx, ny, nz) {
 function fillBoxSurface(out, cx, cy, cz, sx, sy, sz, face, stepsU, stepsV) {
   const uMax = scaleSteps(stepsU);
   const vMax = scaleSteps(stepsV);
-
   for (let u = 0; u <= uMax; u += 1) {
     for (let v = 0; v <= vMax; v += 1) {
       const fu = u / uMax - 0.5;
@@ -74,7 +197,6 @@ function fillBoxSurface(out, cx, cy, cz, sx, sy, sz, face, stepsU, stepsV) {
       let x = cx;
       let y = cy;
       let z = cz;
-
       if (face === 'front') {
         x += fu * sx;
         y += fv * sy;
@@ -96,51 +218,7 @@ function fillBoxSurface(out, cx, cy, cz, sx, sy, sz, face, stepsU, stepsV) {
         y += sy * 0.5;
         z += fv * sz;
       }
-
       out.push([x, y, z]);
-    }
-  }
-}
-
-function fillCylinder(out, cx, cy, cz, radius, height, radialSteps, heightSteps) {
-  const radialMax = scaleSteps(radialSteps);
-  const heightMax = scaleSteps(heightSteps);
-
-  for (let h = 0; h <= heightMax; h += 1) {
-    const y = cy + (h / heightMax - 0.5) * height;
-    for (let r = 0; r < radialMax; r += 1) {
-      const angle = (r / radialMax) * Math.PI * 2;
-      out.push([cx + Math.cos(angle) * radius, y, cz + Math.sin(angle) * radius]);
-    }
-  }
-}
-
-function fillDome(out, cx, cy, cz, radius, rings, segments) {
-  const ringMax = scaleSteps(rings);
-  const segmentMax = scaleSteps(segments);
-
-  for (let ring = 0; ring <= ringMax; ring += 1) {
-    const phi = (ring / ringMax) * (Math.PI / 2);
-    const y = cy + Math.sin(phi) * radius;
-    const ringRadius = Math.cos(phi) * radius;
-    for (let seg = 0; seg < segmentMax; seg += 1) {
-      const theta = (seg / segmentMax) * Math.PI * 2;
-      out.push([cx + Math.cos(theta) * ringRadius, y, cz + Math.sin(theta) * ringRadius]);
-    }
-  }
-}
-
-function fillSpire(out, cx, cy, cz, baseRadius, height, radialSteps, heightSteps) {
-  const radialMax = scaleSteps(radialSteps);
-  const heightMax = scaleSteps(heightSteps);
-
-  for (let h = 0; h <= heightMax; h += 1) {
-    const t = h / heightMax;
-    const y = cy + t * height;
-    const radius = baseRadius * (1 - t * 0.88);
-    for (let r = 0; r < radialMax; r += 1) {
-      const angle = (r / radialMax) * Math.PI * 2;
-      out.push([cx + Math.cos(angle) * radius, y, cz + Math.sin(angle) * radius]);
     }
   }
 }
@@ -148,7 +226,6 @@ function fillSpire(out, cx, cy, cz, baseRadius, height, radialSteps, heightSteps
 function fillArch(out, cx, cy, cz, width, height, depth, segments, rings) {
   const segmentMax = scaleSteps(segments);
   const ringMax = scaleSteps(rings);
-
   for (let ring = 0; ring <= ringMax; ring += 1) {
     const t = ring / ringMax;
     const y = cy + t * height;
@@ -161,344 +238,453 @@ function fillArch(out, cx, cy, cz, width, height, depth, segments, rings) {
   }
 }
 
-function fillRoofRidge(out, x1, y, z1, x2, z2, steps) {
-  const stepMax = scaleSteps(steps);
+function hipRoof(out, cx, cz, hw, hd, eaveY, rise) {
+  const rings = scaleSteps(8);
+  const perim = scaleSteps(22);
+  const cols = scaleSteps(14);
 
+  for (let s = 0; s <= rings; s += 1) {
+    const t = s / rings;
+    const y = eaveY + t * rise;
+    const w = hw * (1 - t * 0.82);
+    const d = hd * (1 - t * 0.82);
+
+    for (let k = 0; k < perim; k += 1) {
+      const u = (k / perim) * 4;
+      let x;
+      let z;
+      if (u < 1) {
+        x = -w + 2 * w * u;
+        z = d;
+      } else if (u < 2) {
+        x = w;
+        z = d - 2 * d * (u - 1);
+      } else if (u < 3) {
+        x = w - 2 * w * (u - 2);
+        z = -d;
+      } else {
+        x = -w;
+        z = -d + 2 * d * (u - 3);
+      }
+      out.push([cx + x, y, cz + z]);
+    }
+
+    for (let c = 0; c <= cols; c += 1) {
+      const fx = cx - w + (c / cols) * w * 2;
+      out.push([fx, y, cz + d]);
+      out.push([fx, y, cz - d]);
+    }
+  }
+
+  const ridgeSteps = scaleSteps(12);
+  const ridgeHalf = hw * 0.16;
+  for (let i = 0; i <= ridgeSteps; i += 1) {
+    const t = i / ridgeSteps;
+    out.push([cx - ridgeHalf + t * ridgeHalf * 2, eaveY + rise, cz]);
+  }
+}
+
+function fillVerticalEdges(out, cx, cy, cz, w, h, d, steps) {
+  const hw = w * 0.5;
+  const hh = h * 0.5;
+  const hd = d * 0.5;
+  const stepMax = scaleSteps(steps);
+  const sampleY = (t) => cy - hh + t * h;
+  const corners = [
+    [cx - hw, cz + hd],
+    [cx + hw, cz + hd],
+    [cx - hw, cz - hd],
+    [cx + hw, cz - hd],
+  ];
+  corners.forEach(([ex, ez]) => {
+    for (let i = 0; i <= stepMax; i += 1) {
+      out.push([ex, sampleY(i / stepMax), ez]);
+    }
+  });
+}
+
+function fillHorizontalRings(out, cx, cy, cz, w, d, y, steps) {
+  const hw = w * 0.5;
+  const hd = d * 0.5;
+  const stepMax = scaleSteps(steps);
   for (let i = 0; i <= stepMax; i += 1) {
     const t = i / stepMax;
-    out.push([x1 + (x2 - x1) * t, y, z1 + (z2 - z1) * t]);
+    const x = cx - hw + t * w;
+    out.push([x, y, cz + hd]);
+    out.push([x, y, cz - hd]);
   }
 }
 
-function fillStairs(out, cx, cy, cz, width, depth, steps, rise) {
-  const stepMax = scaleSteps(steps);
-  const widthMax = scaleSteps(6);
+/** Exterior shell only — no interior volume, no top cap (roof is separate). */
+function wallShell(out, cx, cy, cz, w, h, d, opts = {}) {
+  const { floorYs = [], eaveLip = false } = opts;
+  const su = Math.max(6, Math.round(w * 5));
+  const sv = Math.max(6, Math.round(h * 5.5));
+  const sd = Math.max(6, Math.round(d * 5));
+  const hh = h * 0.5;
+  const hd = d * 0.5;
 
-  for (let s = 0; s <= stepMax; s += 1) {
-    const y = cy + s * rise;
-    const z = cz + (s / stepMax - 0.5) * depth;
-    for (let w = 0; w <= widthMax; w += 1) {
-      const x = cx + (w / widthMax - 0.5) * width;
-      out.push([x, y, z]);
-    }
+  fillBoxSurface(out, cx, cy, cz, w, h, d, 'front', su, sv);
+  fillBoxSurface(out, cx, cy, cz, w, h, d, 'back', su, sv);
+  fillBoxSurface(out, cx, cy, cz, w, h, d, 'left', sd, sv);
+  fillBoxSurface(out, cx, cy, cz, w, h, d, 'right', sd, sv);
+  fillVerticalEdges(out, cx, cy, cz, w, h, d, 5);
+
+  fillHorizontalRings(out, cx, cy, cz, w, d, cy - hh, 10);
+  fillHorizontalRings(out, cx, cy, cz, w, d, cy + hh, 10);
+  floorYs.forEach((fy) => fillHorizontalRings(out, cx, cy, cz, w, d, fy, 8));
+
+  if (eaveLip) {
+    fillBoxSurface(out, cx, cy + hh, cz + hd + 0.04, w, 0.05, 0.1, 'front', su, 1);
   }
 }
 
-function fillWindowGrid(out, cx, cy, cz, width, height, cols, rows) {
-  const colMax = scaleSteps(cols);
-  const rowMax = scaleSteps(rows);
+function wallBox(out, cx, cy, cz, w, h, d) {
+  wallShell(out, cx, cy, cz, w, h, d);
+}
 
-  for (let row = 0; row <= rowMax; row += 1) {
-    for (let col = 0; col <= colMax; col += 1) {
-      out.push([
-        cx + (col / colMax - 0.5) * width,
-        cy + (row / rowMax - 0.5) * height,
-        cz,
-      ]);
-    }
+function addWindow(glass, frame, shutter, x, y, z, w, h) {
+  const recessZ = z - 0.04;
+  fillBoxSurface(glass, x, y, recessZ, w * 0.72, h * 0.8, 0.01, 'front', 5, 6);
+  fillBoxSurface(glass, x, y, recessZ - 0.02, w * 0.72, h * 0.8, 0.01, 'back', 4, 5);
+  fillBoxSurface(frame, x, y + h * 0.5, z, w + 0.06, 0.06, 0.05, 'front', 6, 1);
+  fillBoxSurface(frame, x, y - h * 0.5, z, w + 0.06, 0.06, 0.05, 'front', 6, 1);
+  fillBoxSurface(frame, x - w * 0.5, y, z, 0.06, h, 0.05, 'front', 1, 6);
+  fillBoxSurface(frame, x + w * 0.5, y, z, 0.06, h, 0.05, 'front', 1, 6);
+  fillBoxSurface(frame, x, y, z, w * 0.88, 0.025, 0.04, 'front', 5, 1);
+  fillBoxSurface(frame, x, y, z, 0.025, h * 0.88, 0.04, 'front', 1, 5);
+  fillBoxSurface(frame, x - w * 0.5, y, recessZ, 0.03, h * 0.82, 0.04, 'left', 1, 5);
+  fillBoxSurface(frame, x + w * 0.5, y, recessZ, 0.03, h * 0.82, 0.04, 'right', 1, 5);
+  if (shutter) {
+    fillBoxSurface(shutter, x - w * 0.62, y, z + 0.02, w * 0.34, h * 0.96, 0.025, 'front', 3, 6);
+    fillBoxSurface(shutter, x + w * 0.62, y, z + 0.02, w * 0.34, h * 0.96, 0.025, 'front', 3, 6);
   }
 }
 
-function fillButtress(out, cx, cy, cz, height, depth) {
-  fillBox(out, cx, cy + height * 0.15, cz, 0.18, height * 0.7, depth, 2, 5, 2);
-  fillArch(out, cx, cy - height * 0.15, cz, 0.35, height * 0.35, depth * 0.4, 5, 3);
+function addDoor(door, frame, x, y, z, w, h) {
+  fillBoxSurface(door, x, y + h * 0.5, z - 0.02, w * 0.8, h, 0.03, 'front', 4, 7);
+  fillBoxSurface(door, x, y + h * 0.5, z - 0.05, w * 0.8, h, 0.01, 'back', 3, 6);
+  fillBoxSurface(frame, x - w * 0.5, y + h * 0.5, z, 0.06, h, 0.06, 'front', 1, 7);
+  fillBoxSurface(frame, x + w * 0.5, y + h * 0.5, z, 0.06, h, 0.06, 'front', 1, 7);
+  fillBoxSurface(frame, x, y + h, z, w + 0.08, 0.07, 0.06, 'front', 5, 1);
+  fillBoxSurface(frame, x, y + h * 0.5, z - 0.04, 0.04, h, 0.05, 'left', 1, 6);
+  fillBoxSurface(frame, x, y + h * 0.5, z - 0.04, 0.04, h, 0.05, 'right', 1, 6);
 }
 
-function mirrorEra(slots, points, transform) {
-  points.forEach((p, i) => {
-    const intact = [...p];
-    const post = transform ? transform(p, i) : intact;
-    pushSlot(slots, intact, post, intact);
-  });
+function dormer(out, x, y, z) {
+  fillBoxSurface(out, x, y, z, 0.22, 0.26, 0.18, 'front', 4, 5);
+  fillBoxSurface(out, x, y, z, 0.22, 0.26, 0.18, 'left', 3, 5);
+  fillBoxSurface(out, x, y, z, 0.22, 0.26, 0.18, 'right', 3, 5);
+  fillBoxSurface(out, x, y + 0.13, z, 0.2, 0.02, 0.16, 'top', 4, 3);
+  for (let s = 0; s <= scaleSteps(3); s += 1) {
+    const t = s / scaleSteps(3);
+    out.push([x, y + 0.14 + t * 0.12, z + 0.1 * (1 - t)]);
+  }
 }
 
 function buildPointSlots() {
   const slots = [];
-  let seed = 0;
 
-  // Domplatz + terrace levels (Salzburg forecourt)
-  const plinth = [];
-  fillBox(plinth, 0, -1.28, 0, 4.8, 0.22, 3.8, 20, 1, 15);
-  fillBox(plinth, 0, -1.08, 0.35, 4.4, 0.16, 3.2, 18, 1, 13);
-  fillBox(plinth, 0, -1.22, 1.72, 5.4, 0.12, 2.5, 22, 1, 11);
-  fillStairs(plinth, 0, -1.38, 2.05, 2.4, 0.85, 6, 0.04);
-  mirrorEra(slots, plinth);
+  function isSurvivorZone(x) {
+    return x < SPLIT_X;
+  }
 
-  // Main nave — higher density volume + facades
-  const nave = [];
-  fillBox(nave, 0, 0.12, 0, 2.85, 1.58, 2.15, 14, 9, 10);
-  fillBoxSurface(nave, 0, 0.12, 1.02, 2.85, 1.58, 2.15, 'front', 16, 12);
-  fillBoxSurface(nave, 0, 0.12, -1.02, 2.85, 1.58, 2.15, 'back', 16, 12);
-  fillBoxSurface(nave, -1.42, 0.12, 0, 2.15, 1.58, 2.85, 'left', 10, 12);
-  fillBoxSurface(nave, 1.42, 0.12, 0, 2.15, 1.58, 2.85, 'right', 10, 12);
-  fillRoofRidge(nave, -1.25, 0.94, 0, 1.25, 0, 16);
-  mirrorEra(slots, nave, (p) => [p[0], p[1] - 0.1, p[2]]);
+  function zonesForPoint(p, baseZone) {
+    const survivor = isSurvivorZone(p[0]);
+    const isRoof = p[1] > EAVE - 0.05;
+    const z = isRoof ? 'roof' : baseZone;
+    return [z, survivor ? z : 'office', survivor ? z : 'rubble', z, survivor ? 'historicB' : 'historic'];
+  }
 
-  // West facade baroque pilasters (Domplatz elevation)
-  const facadeColumns = [];
-  [-0.82, -0.42, 0.42, 0.82].forEach((cx) => {
-    fillCylinder(facadeColumns, cx, 0.28, 1.12, 0.09, 1.35, 10, 9);
-  });
-  fillBox(facadeColumns, 0, 0.98, 1.14, 2.55, 0.18, 0.16, 12, 2, 1);
-  fillBox(facadeColumns, 0, -0.18, 1.1, 2.65, 0.14, 0.14, 12, 1, 1);
-  facadeColumns.forEach((p, i) => {
-    pushSharedIntact(
-      slots,
-      p,
-      i % 3 === 0 ? scatterDownward(p, 0.48, seed++) : [p[0], p[1] - 0.12, p[2]]
-    );
-  });
+  function collapsedRubbleFromOffice(p) {
+    const nx = (p[0] - MAIN_CX) / (MAIN_W * 0.5);
+    const heightT = Math.max(0, Math.min(1, (p[1] - GY) / (OFFICE_TOP - GY)));
+    const seed = p[0] * 17.3 + p[1] * 23.1 + p[2] * 11.7;
+    const pileY = GY + 0.08 + (1 - heightT * 0.5) * 1.5 + heightT * 0.15 + (hash(seed) - 0.5) * 0.18;
+    const pileX = MAIN_CX + nx * MAIN_W * 0.44 + (hash(seed + 1) - 0.5) * 0.22;
+    const pileZ = p[2] * 0.48 + 0.12 + (hash(seed + 2) - 0.5) * 0.2;
+    return [pileX, pileY, pileZ];
+  }
 
-  // Choir apse (east end)
-  const apse = [];
-  fillBox(apse, 0, 0.05, -1.12, 1.5, 1.28, 0.95, 9, 7, 4);
-  fillBoxSurface(apse, 0, 0.05, -1.58, 1.5, 1.28, 0.95, 'back', 12, 9);
-  fillDome(apse, 0, 0.58, -1.12, 0.58, 6, 14);
-  fillWindowGrid(apse, 0, 0.12, -1.52, 0.55, 0.65, 4, 6);
-  apse.forEach((p, i) => {
-    pushSharedIntact(slots, p, scatterDownward(p, 0.35 + (i % 4) * 0.06, seed++));
-  });
+  function mapMergedHistoric(p) {
+    const curved = applyFacadeCurve(p);
+    const survivor = isSurvivorZone(curved[0]);
+    const twin1617 = inTwinGap(curved[0]) && curved[1] < EAVE + ROOF_RISE ? HIDDEN : curved;
+    const splitEra = survivor ? curved : HIDDEN;
+    // 1994 + 1617: full width. 1952/1944: left survivor third only (main-house styling).
+    // 1685: left third here; right two-thirds come from office slots at historic height.
+    return [curved, splitEra, splitEra, survivor ? curved : HIDDEN, twin1617];
+  }
 
-  // East transept arm
-  const transept = [];
-  fillBox(transept, 1.65, 0.18, 0, 1.25, 1.35, 1.55, 7, 6, 5);
-  fillBoxSurface(transept, 1.65, 0.18, -0.76, 1.25, 1.35, 1.55, 'back', 8, 7);
-  fillBoxSurface(transept, 1.65, 0.18, 0.76, 1.25, 1.35, 1.55, 'front', 8, 7);
-  fillRoofRidge(transept, 1.05, 0.95, 0, 2.25, 0, 8);
-  transept.forEach((p, i) => {
-    pushSharedIntact(slots, p, scatterDownward(p, 0.75 + (i % 6) * 0.07, seed++));
-  });
+  function mapOfficePoint(p) {
+    const houseV = applyFacadeCurve(scaleYToHeight(p, OFFICE_TOP, EAVE, GY));
+    const rubbleV = collapsedRubbleFromOffice(p);
+    const twinV = shiftX(houseV, TWIN_B_CX - MAIN_CX);
+    const twin1617 = inTwinGap(twinV[0]) ? HIDDEN : twinV;
+    return [HIDDEN, p, rubbleV, houseV, twin1617];
+  }
 
-  // West transept (smaller)
-  const westTransept = [];
-  fillBox(westTransept, -1.65, 0.15, 0, 1.05, 1.2, 1.35, 8, 6, 5);
-  fillBoxSurface(westTransept, -1.65, 0.15, 0.68, 1.05, 1.2, 1.35, 'front', 8, 7);
-  fillRoofRidge(westTransept, -2.05, 0.88, 0, -2.05, 0, 8);
-  westTransept.forEach((p, i) => {
-    pushSharedIntact(
-      slots,
-      p,
-      i % 3 === 0 ? scatterDownward(p, 0.4, seed++) : [...p]
-    );
-  });
+  function mapTwinLocal(p, twinCx) {
+    const merged = shiftX(p, FULL_CX - twinCx);
+    return [merged, HIDDEN, HIDDEN, merged, p];
+  }
 
-  // Main crossing dome + drum (Salzburg copper dome)
-  const drum = [];
-  fillCylinder(drum, 0, 0.74, 0, 0.88, 0.42, 22, 6);
-  fillBoxSurface(drum, 0, 0.74, 0.86, 1.76, 0.42, 1.76, 'front', 14, 4);
-  mirrorEra(slots, drum, (p) => scatterDownward(p, 0.25, seed++));
-
-  const dome = [];
-  fillDome(dome, 0, 0.98, 0, 1.05, 14, 28);
-  dome.forEach((p, i) => {
-    const dist = Math.hypot(p[0], p[2] - 0.05);
-    pushSharedIntact(
-      slots,
-      p,
-      scatterDownward(p, 0.55 + (i % 7) * 0.06 + dist * 0.08, seed++)
-    );
-  });
-
-  const lantern = [];
-  fillCylinder(lantern, 0, 1.88, 0, 0.24, 0.38, 12, 5);
-  fillSpire(lantern, 0, 2.05, 0, 0.07, 0.52, 10, 6);
-  lantern.forEach((p, i) => {
-    pushSharedIntact(slots, p, scatterDownward(p, 0.65, seed++));
-  });
-
-  // Crossing collapse rubble (1945 only)
-  const domeRubble = [];
-  fillBox(domeRubble, 0, -0.25, 0, 2.1, 0.42, 1.9, 16, 6, 12);
-  fillBox(domeRubble, 0, -0.55, -0.15, 1.4, 0.28, 1.2, 10, 4, 9);
-  fillBox(domeRubble, 0.55, -0.42, 0.35, 1.1, 0.22, 1.0, 8, 3, 7);
-  domeRubble.forEach((p, i) => {
-    pushSlot(slots, HIDDEN, scatterDownward(p, 0.18 + (i % 5) * 0.04, seed++), HIDDEN);
-  });
-
-  // Rubble fields (hidden pre-war / present)
-  const rubble = [];
-  fillBox(rubble, 0.35, -0.82, 0.2, 2.2, 0.22, 1.8, 12, 3, 8);
-  fillBox(rubble, 1.35, -0.78, -0.15, 1.4, 0.18, 1.2, 9, 3, 6);
-  fillBox(rubble, -0.5, -0.8, 0.55, 1.0, 0.16, 0.9, 7, 3, 5);
-  fillBox(rubble, -0.85, -0.76, -0.35, 1.2, 0.18, 1.1, 7, 3, 5);
-  rubble.forEach((p) => {
-    pushSlot(slots, HIDDEN, [...p], HIDDEN);
-  });
-
-  // Salzburg west bell towers (iconic Domplatz silhouette)
-  const westTowers = [
-    [-1.08, 0.42, 1.06],
-    [1.08, 0.42, 1.06],
-  ];
-  westTowers.forEach(([sx, sy, sz], towerIndex) => {
-    const base = [];
-    fillBox(base, sx, sy + 0.42, sz, 0.42, 0.95, 0.42, 5, 6, 5);
-    fillBoxSurface(base, sx, sy + 0.42, sz + 0.2, 0.42, 0.95, 0.42, 'front', 6, 8);
-    fillBox(base, sx, sy + 1.05, sz, 0.34, 0.55, 0.34, 4, 4, 4);
-    base.forEach((p) => {
-      const collapse = towerIndex === 0;
-      pushSharedIntact(slots, p, collapse ? scatterDownward(p, 0.45, seed++) : [...p]);
+  function pushAllEras(points, zone) {
+    points.forEach((p) => {
+      pushSlot(slots, zonesForPoint(p, zone), mapMergedHistoric(p, zone));
     });
+  }
 
-    const spire = [];
-    fillSpire(spire, sx, sy + 1.05, sz, 0.15, 1.75, 12, 14);
-    fillSpire(spire, sx, sy + 2.55, sz, 0.05, 0.35, 8, 4);
-    fillWindowGrid(spire, sx, sy + 0.95, sz + 0.21, 0.18, 0.28, 3, 4);
-    fillWindowGrid(spire, sx, sy + 1.45, sz + 0.21, 0.16, 0.22, 3, 3);
-    spire.forEach((p, i) => {
-      const collapse = towerIndex === 0;
-      pushSharedIntact(
-        slots,
-        p,
-        collapse ? scatterDownward(p, 0.5 + (i % 4) * 0.05, seed++) : [...p]
-      );
+  function officeHistoricZone(zone) {
+    if (zone === 'office') return 'historic';
+    if (zone === 'officeGlass') return 'glass';
+    return zone;
+  }
+
+  function pushOfficeEras(points, zone) {
+    points.forEach((p) => {
+      const isRoof = p[1] > OFFICE_TOP - 0.15;
+      const z = isRoof ? 'roof' : zone;
+      // 1685: right two-thirds at historic height with main-house colours.
+      pushSlot(slots, [z, z, 'rubble', officeHistoricZone(z), z], mapOfficePoint(p));
     });
-  });
-
-  // West triple portal (1628 bronze doors on present day)
-  const portal = [];
-  fillArch(portal, -0.4, -0.04, 1.06, 0.44, 0.82, 0.1, 9, 6);
-  fillArch(portal, 0, -0.01, 1.08, 0.56, 0.95, 0.12, 11, 7);
-  fillArch(portal, 0.4, -0.04, 1.06, 0.44, 0.82, 0.1, 9, 6);
-  fillBox(portal, 0, 0.28, 1.06, 1.35, 1.55, 0.16, 4, 9, 1);
-  fillWindowGrid(portal, -0.3, 0.48, 1.12, 0.24, 0.58, 4, 6);
-  fillWindowGrid(portal, 0.3, 0.48, 1.12, 0.24, 0.58, 4, 6);
-  portal.forEach((p, i) => {
-    pushSharedIntact(
-      slots,
-      p,
-      i % 2 === 0 ? scatterDownward(p, 0.55, seed++) : [p[0], p[1] - 0.15, p[2]]
-    );
-  });
-
-  // Side aisle roofs
-  const aisles = [];
-  fillBox(aisles, -1.95, 0.02, 0, 0.55, 0.95, 2.2, 3, 5, 8);
-  fillBox(aisles, 1.95, 0.02, 0, 0.55, 0.95, 2.2, 3, 5, 8);
-  fillRoofRidge(aisles, -2.2, 0.52, -0.9, -2.2, 0.9, 6);
-  fillRoofRidge(aisles, 2.2, 0.52, -0.9, 2.2, 0.9, 6);
-  mirrorEra(slots, aisles, (p, i) => (i % 5 === 0 ? scatterDownward(p, 0.2, seed++) : [p[0], p[1] - 0.06, p[2]]));
-
-  // Flying buttresses
-  const buttresses = [];
-  [-1.55, 1.55].forEach((bx) => {
-    fillButtress(buttresses, bx, 0.05, 0.35, 0.95, 0.45);
-    fillButtress(buttresses, bx, 0.05, -0.35, 0.95, 0.45);
-  });
-  buttresses.forEach((p, i) => {
-    pushSharedIntact(
-      slots,
-      p,
-      i % 4 === 0 ? scatterDownward(p, 0.35, seed++) : [...p]
-    );
-  });
-
-  // Colonnade — six columns + entablature
-  const colonnade = [];
-  for (let c = 0; c < 6; c += 1) {
-    const cx = -2.35 + c * 0.42;
-    fillCylinder(colonnade, cx, 0.02, 1.35, 0.1, 1.15, 8, 7);
   }
-  fillBox(colonnade, -2.14, 0.62, 1.35, 2.1, 0.12, 0.35, 10, 1, 2);
-  colonnade.forEach((p, i) => {
-    pushSharedIntact(slots, p, scatterDownward(p, 0.4 + (i % 3) * 0.08, seed++));
-  });
 
-  // Clerestory windows
-  const clerestory = [];
-  for (let w = -1; w <= 1; w += 1) {
-    fillWindowGrid(clerestory, w * 0.75, 0.55, 0, 0.35, 0.45, 4, 5);
+  function pushEraOnly(points, eraIndex, zone, posFn) {
+    points.forEach((p, i) => {
+      const positions = [HIDDEN, HIDDEN, HIDDEN, HIDDEN, HIDDEN];
+      positions[eraIndex] = posFn ? posFn(p, i) : [...p];
+      pushSlot(slots, zone, positions);
+    });
   }
-  mirrorEra(slots, clerestory);
 
-  // Shared facade + drum articulation (all intact eras)
-  const surfaceDetail = [];
-  for (let w = -1; w <= 1; w += 1) {
-    fillWindowGrid(surfaceDetail, w * 0.82, 0.64, 1.0, 0.3, 0.42, 6, 6);
-    fillWindowGrid(surfaceDetail, w * 0.82, 0.64, -1.0, 0.3, 0.42, 6, 6);
+  function pushTwinEras(points, twinCx, zone) {
+    points.forEach((p) => {
+      const z = p[1] > EAVE - 0.05 ? 'roof' : zone;
+      pushSlot(slots, [z, z, z, z, z], mapTwinLocal(p, twinCx));
+    });
   }
-  for (let side = -1; side <= 1; side += 2) {
-    fillBoxSurface(
-      surfaceDetail,
-      side * 1.44,
-      0.12,
-      0,
-      2.15,
-      1.58,
-      2.85,
-      side > 0 ? 'right' : 'left',
-      10,
-      12
-    );
-  }
-  for (let r = 0; r < 24; r += 1) {
-    const angle = (r / 24) * Math.PI * 2;
-    fillBox(
-      surfaceDetail,
-      Math.cos(angle) * 0.84,
-      0.74,
-      Math.sin(angle) * 0.84,
-      0.05,
-      0.4,
-      0.05,
-      1,
-      6,
-      1
-    );
-  }
-  fillRoofRidge(surfaceDetail, -1.28, 0.96, -0.35, 1.28, -0.35, 12);
-  fillRoofRidge(surfaceDetail, -1.28, 0.96, 0.35, 1.28, 0.35, 12);
-  mirrorEra(slots, surfaceDetail);
 
-  // Present-only — free-standing Domplatz infrastructure (hidden in 1938 / 1945)
-  const presentInfra = [];
-  // Visitor pavilion (southeast forecourt)
-  fillBox(presentInfra, 1.75, 0.05, 2.15, 0.85, 0.48, 0.65, 10, 6, 7);
-  fillBoxSurface(presentInfra, 1.75, 0.05, 2.48, 0.85, 0.48, 0.65, 'front', 10, 6);
-  fillBoxSurface(presentInfra, 1.75, 0.32, 2.15, 0.85, 0.06, 0.65, 'top', 10, 7);
-  // Glazed connector to south aisle
-  fillBox(presentInfra, 0.95, 0.12, 1.62, 0.14, 0.06, 1.05, 2, 2, 10);
-  fillBox(presentInfra, 0.95, 0.26, 1.62, 0.16, 0.04, 1.08, 2, 1, 10);
-  // Crypt museum entrance canopy (southwest approach)
-  fillBox(presentInfra, -1.2, 0.22, 1.72, 0.75, 0.06, 0.55, 8, 1, 5);
-  fillBox(presentInfra, -1.2, 0.38, 1.72, 0.7, 0.05, 0.5, 7, 1, 4);
-  // Plaza information kiosk
-  fillBox(presentInfra, 0.35, 0.02, 2.05, 0.38, 0.28, 0.32, 5, 4, 4);
-  fillBoxSurface(presentInfra, 0.35, 0.18, 2.05, 0.38, 0.06, 0.32, 'top', 5, 4);
-  // Forecourt railing + bollards along Domplatz edge
-  for (let i = 0; i <= 12; i += 1) {
-    const x = -2.3 + (i / 12) * 4.6;
-    fillBox(presentInfra, x, -0.65, 2.45, 0.07, 0.42, 0.07, 2, 5, 2);
-  }
-  pushPresentOnly(slots, presentInfra);
-
-  // Residenzplatz fountain (shared intact eras)
-  const fountain = [];
-  fillCylinder(fountain, 0, -0.98, 2.42, 0.62, 0.1, 18, 1);
-  fillCylinder(fountain, 0, -0.72, 2.42, 0.14, 0.42, 10, 5);
-  mirrorEra(slots, fountain, (p, i) =>
-    scatterDownward(p, 0.12 + (i % 4) * 0.03, seed++)
-  );
-
-  // Courtyard paving — Domplatz grid
-  const paving = [];
-  const pavingStep = 0.32 / POINT_DENSITY;
-  for (let px = -2.6; px <= 2.6; px += pavingStep) {
-    for (let pz = 0.85; pz <= 2.55; pz += pavingStep * 0.86) {
-      paving.push([px, -1.18, pz]);
+  // ── Ground & plaza ───────────────────────────────────────────────────────
+  const base = [];
+  fillBoxSurface(base, 0, GY - 0.04, 0.1, FULL_W + 1.0, 0.14, DEPTH + 1.4, 'top', 12, 8);
+  const paveStep = 0.38;
+  for (let px = -3.2; px <= 3.2; px += paveStep) {
+    for (let pz = FRONT + 0.15; pz <= FRONT + 1.35; pz += paveStep * 0.9) {
+      base.push([px, GY + 0.02, pz]);
     }
   }
-  mirrorEra(slots, paving);
+  pushAllEras(base, 'ground');
+
+  const cobble = [];
+  fillBoxSurface(cobble, 0, GY + 0.04, FRONT + 0.55, FULL_W + 0.4, 0.03, 1.8, 'top', 14, 5);
+  pushAllEras(cobble, 'cobble');
+
+  // ── Merged full historic house (1994 / 1685 base) ────────────────────────
+  const walls = [];
+  wallShell(walls, FULL_CX, (GY + EAVE) / 2, 0, FULL_W, EAVE - GY, DEPTH, {
+    floorYs: [GY + 0.62, GY + 0.12],
+    eaveLip: true,
+  });
+  const stoneBase = [];
+  fillBoxSurface(stoneBase, FULL_CX, GY - 0.06, FRONT + 0.03, FULL_W * 0.98, 0.16, 0.1, 'front', 18, 2);
+  fillBoxSurface(stoneBase, FULL_CX, GY - 0.06, 0, FULL_W * 0.98, 0.16, DEPTH, 'left', 6, 2);
+  fillBoxSurface(stoneBase, FULL_CX, GY - 0.06, 0, FULL_W * 0.98, 0.16, DEPTH, 'right', 6, 2);
+  pushAllEras(stoneBase, 'stone');
+  pushAllEras(walls, 'historic');
+
+  // Upper windows — 10 bays (1994 reference)
+  const winGlass = [];
+  const winFrame = [];
+  const winShutter = [];
+  for (let col = 0; col < 10; col += 1) {
+    const x = FULL_CX + (col / 9 - 0.5) * FULL_W * 0.9;
+    addWindow(winGlass, winFrame, winShutter, x, GY + 0.92, FRONT, 0.36, 0.4);
+  }
+  // Middle floor — 8 bays
+  for (let col = 0; col < 8; col += 1) {
+    const x = FULL_CX + (col / 7 - 0.5) * FULL_W * 0.86;
+    addWindow(winGlass, winFrame, winShutter, x, GY + 0.42, FRONT, 0.34, 0.36);
+  }
+  pushAllEras(winGlass, 'glass');
+  pushAllEras(winFrame, 'frame');
+  pushAllEras(winShutter, 'shutter');
+
+  // Basement slits — 12 narrow windows
+  const basement = [];
+  for (let col = 0; col < 12; col += 1) {
+    const x = FULL_CX + (col / 11 - 0.5) * FULL_W * 0.94;
+    fillBoxSurface(basement, x, GY + 0.08, FRONT + 0.02, 0.22, 0.1, 0.01, 'front', 3, 2);
+  }
+  pushAllEras(basement, 'glass');
+
+  // Stone portal + cafe arches (left)
+  const stone = [];
+  fillBoxSurface(stone, -0.6, GY + 0.32, FRONT + 0.03, 0.55, 0.82, 0.08, 'front', 3, 7);
+  [-2.45, -1.6].forEach((ax) => fillArch(stone, ax, GY + 0.18, FRONT + 0.02, 0.42, 0.52, 0.1, 7, 6));
+  pushAllEras(stone, 'stone');
+
+  const doors = [];
+  addDoor(doors, winFrame, -0.6, GY, FRONT, 0.44, 0.68);
+  pushAllEras(doors, 'door');
+
+  // Cornice bands
+  const bands = [];
+  fillBoxSurface(bands, FULL_CX, GY + 0.62, FRONT + 0.04, FULL_W, 0.05, 0.06, 'front', 16, 1);
+  fillBoxSurface(bands, FULL_CX, EAVE, FRONT + 0.05, FULL_W, 0.07, 0.08, 'front', 16, 1);
+  pushAllEras(bands, 'stone');
+
+  // Hipped roof + dormers
+  const roofPts = [];
+  hipRoof(roofPts, FULL_CX, 0, FULL_W / 2, DEPTH / 2, EAVE, ROOF_RISE);
+  [-2.35, -0.75, 0.75, 2.35].forEach((dx) => {
+    dormer(roofPts, FULL_CX + dx, EAVE + 0.22, 1.05);
+    fillBoxSurface(roofPts, FULL_CX + dx, EAVE + 0.22, 1.1, 0.12, 0.14, 0.01, 'front', 2, 2);
+  });
+  const chimneys = [];
+  wallBox(chimneys, 2.35, EAVE + 0.62, -0.1, 0.22, 0.62, 0.22);
+  [-1.55, 0.25, 1.95].forEach((cx) => wallBox(chimneys, cx, EAVE + 0.55, 0.15, 0.14, 0.38, 0.14));
+  pushAllEras(roofPts, 'roof');
+  pushAllEras(chimneys, 'detail');
+
+  // 1685-only shop awning + moulding
+  const awning = [];
+  fillBoxSurface(awning, -1.6, GY + 0.28, FRONT + 0.42, 1.1, 0.04, 0.22, 'front', 6, 1);
+  const moulding = [];
+  fillBoxSurface(moulding, FULL_CX, GY + 0.58, FRONT + 0.05, FULL_W * 0.92, 0.04, 0.05, 'front', 14, 1);
+  pushEraOnly(awning, 3, 'detail', (p) => applyFacadeCurve(p));
+  pushEraOnly(moulding, 3, 'moulding', (p) => applyFacadeCurve(p));
+  pushEraOnly(awning, 0, 'detail', (p) => applyFacadeCurve(p));
+
+  // ── 1952 office block (right 2/3) ────────────────────────────────────────
+  const officeWall = [];
+  const officeGlass = [];
+  const officeFrame = [];
+  const officeTrim = [];
+  const officeRoof = [];
+  const officeCY = (GY + OFFICE_TOP) / 2;
+  const officeH = OFFICE_TOP - GY;
+  wallShell(officeWall, MAIN_CX, officeCY, 0, MAIN_W, officeH, DEPTH + 0.12, {
+    floorYs: [GY + FLOOR_H, GY + FLOOR_H * 2, GY + FLOOR_H * 3, GY + FLOOR_H * 4],
+    eaveLip: true,
+  });
+  fillBoxSurface(officeTrim, MAIN_CX, OFFICE_TOP - 0.04, FRONT + 0.05, MAIN_W, 0.08, 0.06, 'front', 10, 1);
+  hipRoof(officeRoof, MAIN_CX, 0, MAIN_W / 2, DEPTH / 2 + 0.06, OFFICE_TOP, 0.28);
+
+  for (let floor = 0; floor < 5; floor += 1) {
+    const fy = GY + FLOOR_H * 0.55 + floor * FLOOR_H;
+    const zone = floor === 0 ? 'officeGlass' : 'glass';
+    for (let col = 0; col < 4; col += 1) {
+      const bx = MAIN_CX + (col / 3 - 0.5) * MAIN_W * 0.82;
+      addWindow(officeGlass, officeFrame, null, bx, fy, FRONT + 0.06, MAIN_W * 0.17, FLOOR_H * 0.52);
+    }
+    if (floor > 0) {
+      fillBoxSurface(officeTrim, MAIN_CX, GY + floor * FLOOR_H, FRONT + 0.07, MAIN_W, 0.04, 0.05, 'front', 10, 1);
+    }
+  }
+  pushOfficeEras(officeWall, 'office');
+  pushOfficeEras(officeGlass, 'officeGlass');
+  pushOfficeEras(officeFrame, 'frame');
+  pushOfficeEras(officeTrim, 'office');
+  pushOfficeEras(officeRoof, 'roof');
+
+  // 1952 hedge + stone wall along survivor (left wing)
+  const hedge = [];
+  fillBoxSurface(hedge, SURVIVOR_CX, GY + 0.08, FRONT + 0.55, SURVIVOR_W + 0.35, 0.3, 0.45, 'front', 5, 3);
+  const survWall = [];
+  fillBoxSurface(survWall, SURVIVOR_CX, GY - 0.02, FRONT + 0.48, SURVIVOR_W + 0.5, 0.12, 0.35, 'front', 6, 1);
+  pushEraOnly(hedge, 1, 'hedge', (p) => p);
+  pushEraOnly(survWall, 1, 'stone', (p) => p);
+
+  // ── 1944 ruin — right 2/3 timber nest + masonry (office morphs into this volume) ──
+  const rubble = [];
+  const timber = [];
+  const masonry = [];
+  const ruinDebris = [];
+  buildRuinPile(rubble, timber, masonry, ruinDebris);
+
+  const partyWall = [];
+  fillBoxSurface(partyWall, SPLIT_X + 0.04, (GY + EAVE) / 2, FRONT + 0.03, 0.1, EAVE - GY, 0.12, 'front', 1, 9);
+  fillVerticalEdges(partyWall, SPLIT_X + 0.04, (GY + EAVE) / 2, 0, 0.1, EAVE - GY, DEPTH, 5);
+  for (let k = 0; k < 6; k += 1) {
+    const s = k * 11.5;
+    const by = GY + 0.35 + hash(s) * 1.1;
+    sampleLine(
+      timber,
+      SPLIT_X + 0.08,
+      by,
+      0.15 + hash(s + 1) * 0.3,
+      SPLIT_X + 0.55 + hash(s + 2) * 0.4,
+      by + 0.25 + hash(s + 3) * 0.5,
+      -0.1 + hash(s + 4) * 0.35,
+      5
+    );
+  }
+
+  pushEraOnly(rubble, 2, 'rubble', (p) => p);
+  pushEraOnly(masonry, 2, 'rubble', (p) => p);
+  pushEraOnly(ruinDebris, 2, 'rubble', (p) => p);
+  pushEraOnly(partyWall, 2, 'stone', (p) => p);
+  pushEraOnly(timber, 2, 'timber', (p) => p);
+
+  // ── 1617 twin houses — combined width equals FULL_W ──────────────────────
+  [
+    { cx: TWIN_A_CX, w: TWIN_W },
+    { cx: TWIN_B_CX, w: TWIN_W },
+  ].forEach(({ cx, w }) => {
+    const twinWalls = [];
+    wallShell(twinWalls, cx, (GY + EAVE) / 2, 0, w, EAVE - GY, DEPTH, {
+      floorYs: [GY + 0.62],
+      eaveLip: true,
+    });
+    pushTwinEras(twinWalls, cx, 'historic');
+
+    const twinRoof = [];
+    hipRoof(twinRoof, cx, 0, w / 2, DEPTH / 2, EAVE, ROOF_RISE * 0.92);
+    dormer(twinRoof, cx - w * 0.12, EAVE + 0.2, 1.02);
+    dormer(twinRoof, cx + w * 0.18, EAVE + 0.2, 1.02);
+    wallBox(twinRoof, cx + w * 0.28, EAVE + 0.58, -0.08, 0.16, 0.48, 0.16);
+    pushTwinEras(twinRoof, cx, 'roof');
+
+    const twinWin = [];
+    const twinFr = [];
+    const twinSh = [];
+    for (let col = 0; col < 5; col += 1) {
+      const x = cx + (col / 4 - 0.5) * w * 0.82;
+      addWindow(twinWin, twinFr, twinSh, x, GY + 0.92, FRONT, 0.32, 0.38);
+      addWindow(twinWin, twinFr, twinSh, x, GY + 0.42, FRONT, 0.3, 0.34);
+    }
+    fillArch(twinFr, cx, GY + 0.18, FRONT + 0.02, 0.4, 0.5, 0.1, 7, 6);
+    pushTwinEras(twinWin, cx, 'glass');
+    pushTwinEras(twinFr, cx, 'frame');
+    pushTwinEras(twinSh, cx, 'shutter');
+  });
+
+  // Cobble in the twin gap (1617 only)
+  const gapCobble = [];
+  fillBoxSurface(gapCobble, 0, GY + 0.22, FRONT + 0.12, TWIN_GAP + 0.08, 0.04, 0.5, 'top', 2, 2);
+  pushEraOnly(gapCobble, 4, 'cobble', (p) => p);
+
+  // ── 1994 present-only details ────────────────────────────────────────────
+  const planters = [];
+  [-2.9, -2.5, -2.1].forEach((px) => wallBox(planters, px, GY + 0.18, FRONT + 0.35, 0.28, 0.36, 0.28));
+  pushEraOnly(planters, 0, 'plant', (p) => p);
+
+  const bollards = [];
+  for (let i = 0; i <= 4; i += 1) {
+    fillBoxSurface(bollards, 2.55 + i * 0.17, GY + 0.12, FRONT + 0.75, 0.08, 0.38, 0.08, 'front', 1, 3);
+  }
+  pushEraOnly(bollards, 0, 'detail', (p) => p);
 
   return slots;
 }
 
 const POINT_SLOTS = buildPointSlots();
 
-function flattenEra(key) {
+function flattenEraPositions(key) {
   const positions = new Float32Array(POINT_SLOTS.length * 3);
   POINT_SLOTS.forEach((slot, i) => {
-    const p = slot[key];
+    const { p } = slot[key];
     positions[i * 3] = p[0];
     positions[i * 3 + 1] = p[1];
     positions[i * 3 + 2] = p[2];
@@ -506,23 +692,98 @@ function flattenEra(key) {
   return positions;
 }
 
-/** Per-era RGB tint (0–1) — index order matches TIMELINE_ERAS. */
+function flattenEraColors(key) {
+  const colors = new Float32Array(POINT_SLOTS.length * 3);
+  POINT_SLOTS.forEach((slot, i) => {
+    const { c } = slot[key];
+    colors[i * 3] = c[0];
+    colors[i * 3 + 1] = c[1];
+    colors[i * 3 + 2] = c[2];
+  });
+  return colors;
+}
+
 export const ERA_COLORS = [
-  [0.82, 0.86, 0.92], // present
-  [0.5, 0.48, 0.46], // post-war — bomb dust and ash
-  [0.82, 0.86, 0.92], // pre-war — same cathedral fabric
+  [0.96, 0.84, 0.78],
+  [0.78, 0.74, 0.66],
+  [0.48, 0.42, 0.38],
+  [0.78, 0.72, 0.64],
+  [0.74, 0.68, 0.62],
 ];
 
-export const ERA_POSITIONS = [
-  flattenEra('present'),
-  flattenEra('postWar'),
-  flattenEra('preWar'),
-];
-
+export const ERA_POSITIONS = ERA_KEYS.map((key) => flattenEraPositions(key));
+export const ERA_VERTEX_COLORS = ERA_KEYS.map((key) => flattenEraColors(key));
+export const ERA_POINT_COLORS = ERA_VERTEX_COLORS;
+export const ERA_COLOR_BUFFERS = ERA_VERTEX_COLORS;
 export const POINT_COUNT = POINT_SLOTS.length;
+export const VERTEX_COUNT = POINT_COUNT;
 
-/** Visible monument bounds (ignores hidden-era sentinel points). */
+function computeBounds(positions, filterFn) {
+  let minX = Infinity;
+  let minY = Infinity;
+  let minZ = Infinity;
+  let maxX = -Infinity;
+  let maxY = -Infinity;
+  let maxZ = -Infinity;
+
+  for (let i = 0; i < positions.length; i += 3) {
+    const y = positions[i + 1];
+    if (y < -4) continue;
+    if (filterFn && !filterFn(i / 3)) continue;
+    minX = Math.min(minX, positions[i]);
+    minY = Math.min(minY, y);
+    minZ = Math.min(minZ, positions[i + 2]);
+    maxX = Math.max(maxX, positions[i]);
+    maxY = Math.max(maxY, y);
+    maxZ = Math.max(maxZ, positions[i + 2]);
+  }
+
+  return {
+    min: [minX, minY, minZ],
+    max: [maxX, maxY, maxZ],
+    center: [(minX + maxX) / 2, (minY + maxY) / 2, (minZ + maxZ) / 2],
+    size: [maxX - minX, maxY - minY, maxZ - minZ],
+  };
+}
+
 export function getMonumentBounds() {
+  let minX = Infinity;
+  let minY = Infinity;
+  let minZ = Infinity;
+  let maxX = -Infinity;
+  let maxY = -Infinity;
+  let maxZ = -Infinity;
+
+  ERA_POSITIONS.forEach((positions) => {
+    for (let i = 0; i < positions.length; i += 3) {
+      const y = positions[i + 1];
+      if (y < -4) continue;
+      minX = Math.min(minX, positions[i]);
+      minY = Math.min(minY, y);
+      minZ = Math.min(minZ, positions[i + 2]);
+      maxX = Math.max(maxX, positions[i]);
+      maxY = Math.max(maxY, y);
+      maxZ = Math.max(maxZ, positions[i + 2]);
+    }
+  });
+
+  return {
+    min: [minX, minY, minZ],
+    max: [maxX, maxY, maxZ],
+    center: [(minX + maxX) / 2, (minY + maxY) / 2, (minZ + maxZ) / 2],
+    size: [maxX - minX, maxY - minY, maxZ - minZ],
+  };
+}
+
+export function getBuildingBounds() {
+  return computeBounds(ERA_POSITIONS[0], (vi) => ERA_POSITIONS[0][vi * 3 + 1] > -1.5);
+}
+
+/** Camera framing — building mass only, excludes street/plaza in front. */
+export function getFramingBounds() {
+  const yMin = GY + 0.02;
+  const yMax = OFFICE_TOP + 0.38;
+  const zMax = FRONT + 0.35;
   let minX = Infinity;
   let minY = Infinity;
   let minZ = Infinity;
@@ -535,9 +796,7 @@ export function getMonumentBounds() {
       const x = positions[i];
       const y = positions[i + 1];
       const z = positions[i + 2];
-
-      if (y < -4) continue;
-
+      if (y < -4 || y < yMin || y > yMax || z > zMax) continue;
       minX = Math.min(minX, x);
       minY = Math.min(minY, y);
       minZ = Math.min(minZ, z);
@@ -556,24 +815,34 @@ export function getMonumentBounds() {
 }
 
 export const MONUMENT_BOUNDS = getMonumentBounds();
+export const BUILDING_BOUNDS = getBuildingBounds();
+export const FRAMING_BOUNDS = getFramingBounds();
 
-/** Linear interpolation between two era position buffers. */
 export function lerpEraPositions(fromIndex, toIndex, t, target) {
   const from = ERA_POSITIONS[fromIndex];
   const to = ERA_POSITIONS[toIndex];
   const eased = easeInOutCubic(t);
-
   for (let i = 0; i < target.length; i += 1) {
     target[i] = from[i] + (to[i] - from[i]) * eased;
   }
 }
 
-/** Interpolate era colors. */
+export function lerpEraVertexColors(fromIndex, toIndex, t, target) {
+  const from = ERA_VERTEX_COLORS[fromIndex];
+  const to = ERA_VERTEX_COLORS[toIndex];
+  const eased = easeInOutCubic(t);
+  for (let i = 0; i < target.length; i += 1) {
+    target[i] = from[i] + (to[i] - from[i]) * eased;
+  }
+}
+
+export const lerpEraPointColors = lerpEraVertexColors;
+export const lerpColorBuffers = lerpEraVertexColors;
+
 export function lerpEraColors(fromIndex, toIndex, t, target) {
   const from = ERA_COLORS[fromIndex];
   const to = ERA_COLORS[toIndex];
   const eased = easeInOutCubic(t);
-
   target[0] = from[0] + (to[0] - from[0]) * eased;
   target[1] = from[1] + (to[1] - from[1]) * eased;
   target[2] = from[2] + (to[2] - from[2]) * eased;

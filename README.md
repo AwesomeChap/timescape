@@ -1,12 +1,12 @@
 # Timescape
 
-Interactive 3D point-cloud morph of **Salzburg Cathedral** across three historical eras — a hackathon experiment.
+Interactive 3D point-cloud morph of **Mozart's Wohnhaus** across five historical eras — a hackathon experiment.
 
 ## Stack
 
 - React 18 + Vite
-- Three.js (WebGL point cloud)
-- Procedural monument geometry (~270k points) with era morphing
+- Three.js (WebGL point-cloud morph)
+- Procedural point-cloud monument with per-era vertex colours across five timelines
 
 ## Development
 
@@ -48,7 +48,7 @@ Optional: add a custom domain under the site’s **Settings** → **Custom Domai
 
 ## Timeline
 
-Present → past (left to right): **2024 · 1945 · 1938**
+Present → past (left to right): **1994 · 1952 · 1944 · 1685 · 1617**
 
 - Drag to orbit, scroll to zoom
 - Click timeline dots to morph between eras
