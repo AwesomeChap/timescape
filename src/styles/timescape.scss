@@ -106,6 +106,17 @@ $timescape-copy-gap: calc(16 * #{$mesh});
 .timescape-page__era .text {
   margin: 0;
   color: rgba(221, 221, 221, 0.72);
+  white-space: pre-line;
+}
+
+.timescape-page__era-line + .timescape-page__era-line {
+  margin-top: calc(3 * #{$mesh});
+}
+
+.timescape-page__era-year-inline {
+  color: #fff;
+  font-weight: 700;
+  margin-right: 0.2em;
 }
 
 .timescape-page__stage {
@@ -294,6 +305,7 @@ $timescape-copy-gap: calc(16 * #{$mesh});
 .timescape-timeline__year {
   font-family: Futura, sans-serif;
   font-size: 0.95rem;
+  font-weight: 700;
   letter-spacing: 0.05em;
   font-variant-numeric: tabular-nums;
   line-height: 1.1;

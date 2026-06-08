@@ -9,36 +9,44 @@ export const TIMELINE_ERAS = [
     id: 'era1994',
     year: 1994,
     label: 'Present day',
-    description:
-      'Fully restored salmon-pink residence with shuttered windows, basement slits, stone arched portal, dormered shingle roof, and planters along Makartplatz.',
+    description: `1989: The International Mozarteum Foundation, which had already acquired the preserved portion of the Tanzmeistersaal for museum purposes in 1955, purchased the remaining part of the building.
+
+1994: The office building was demolished, and reconstruction began based on the original plans.
+
+1996: Opening of the Museum Mozarts Residence.
+
+2022: The restored Magic Flute cottage has been placed in the courtyard. It was moved from its long-time location in the Mozarteum garden following renovations in the 2020s.`,
   },
   {
     id: 'era1952',
     year: 1952,
     label: 'Insurance office',
     description:
-      'Two-thirds of the bombed house was sold to an insurance company. The brown-grey surviving third — with arched shopfronts and a hedge — remained on the left; a five-storey beige office block rose on the right.',
+      'The owner at the time sold the bombed-out section to the insurance company Assicurazioni Generali, which built an office building there in 1952.',
   },
   {
     id: 'era1944',
     year: 1944,
     label: 'Bombing aftermath',
-    description:
-      'An air raid destroyed roughly two-thirds of the house. The surviving third on the left still stood; the right two-thirds collapsed into a settled rubble mound.',
+    description: 'Two-thirds of the house was destroyed by an aerial bomb.',
   },
   {
     id: 'era1685',
     year: 1685,
     label: 'Merged residence',
-    description:
-      'Two original town houses were combined into one long Mozart family residence — tall shuttered windows, a shop awning, arched shopfronts, ridge chimneys, and a continuous hipped roof.',
+    description: `Until 1685, it consisted of two houses.
+
+1711: Franz Gottlieb Spöckner was granted permission by decree to hold dance lessons for members of the nobility in this house. For this reason, the house was called the "Tanzmeistersaal" starting in 1713.
+
+1773: The Mozarts moved into their new, much more spacious home on what was then Hannibalplatz (now Makartplatz 8).
+
+1939: The house has been designated a historic landmark.`,
   },
   {
     id: 'era1617',
     year: 1617,
     label: 'Twin houses',
-    description:
-      'Before the merger, two separate Baroque town houses stood side by side on the plot — the earliest chapter of the site.',
+    description: 'The building was first mentioned in historical records in 1617.',
   },
 ];
 

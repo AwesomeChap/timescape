@@ -92,7 +92,24 @@ export default function App() {
                   subHeading={displayEra.label}
                   className="timescape-page__era-heading"
                 />
-                <p className="text">{displayEra.description}</p>
+                {displayEra.description
+                  .split('\n')
+                  .filter((line) => line.trim() !== '')
+                  .map((line, index) => {
+                    const match = line.match(/^(\d{4}):?(.*)$/);
+                    return (
+                      <p className="text timescape-page__era-line" key={index}>
+                        {match ? (
+                          <>
+                            <span className="timescape-page__era-year-inline">{match[1]}</span>
+                            {match[2]}
+                          </>
+                        ) : (
+                          line
+                        )}
+                      </p>
+                    );
+                  })}
               </div>
             </aside>
           </div>
