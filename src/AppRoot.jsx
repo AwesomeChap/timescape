@@ -1,16 +1,28 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useRef, useState } from 'react';
 import MapLanding from '@/features/map/MapLanding';
 import TimescapePage from '@/features/timescape/TimescapePage';
+import PixelPageTransition from '@/shared/transitions/PixelPageTransition';
 
 export default function AppRoot() {
   const [view, setView] = useState('map');
+  const transitionRef = useRef(null);
 
-  const enterTimescape = useCallback(() => setView('timescape'), []);
-  const backToMap = useCallback(() => setView('map'), []);
+  const enterTimescape = useCallback(() => {
+    transitionRef.current?.navigate(() => setView('timescape'));
+  }, []);
 
-  if (view === 'timescape') {
-    return <TimescapePage onBackToMap={backToMap} />;
-  }
+  const backToMap = useCallback(() => {
+    transitionRef.current?.navigate(() => setView('map'));
+  }, []);
 
-  return <MapLanding onEnterTimescape={enterTimescape} />;
+  return (
+    <>
+      <PixelPageTransition ref={transitionRef} />
+      {view === 'timescape' ? (
+        <TimescapePage onBackToMap={backToMap} />
+      ) : (
+        <MapLanding onEnterTimescape={enterTimescape} />
+      )}
+    </>
+  );
 }

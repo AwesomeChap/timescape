@@ -1,0 +1,11 @@
+.pixel-transition-canvas {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  pointer-events: none;
+  will-change: contents;
+}
+
+body.page-transitioning {
+  overflow: hidden;
+}
