@@ -14,6 +14,7 @@ import {
   getPixelTransitionStagger,
   shouldUsePixelTransition,
 } from './pixelTransitionGrid';
+import { isMobileViewport } from '@/shared/utils/responsive';
 import './styles/PixelPageTransition.scss';
 
 function scheduleFrame(callback) {
@@ -52,7 +53,10 @@ const PixelPageTransition = forwardRef(function PixelPageTransition(_props, ref)
 
     const width = window.innerWidth;
     const height = window.innerHeight;
-    const dpr = Math.min(window.devicePixelRatio || 1, /firefox/i.test(navigator.userAgent) ? 1.5 : 2);
+    const dpr = Math.min(
+      window.devicePixelRatio || 1,
+      isMobileViewport() ? 1.25 : /firefox/i.test(navigator.userAgent) ? 1.5 : 2,
+    );
     dprRef.current = dpr;
     canvas.width = Math.floor(width * dpr);
     canvas.height = Math.floor(height * dpr);

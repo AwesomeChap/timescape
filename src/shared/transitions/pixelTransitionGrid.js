@@ -1,11 +1,13 @@
 import { computePixelBlinkGrid } from '@/shared/background/pixelBlinkGrid';
-import { BREAKPOINT_TABLET } from '@/shared/utils/responsive';
+import { isMobileViewport } from '@/shared/utils/responsive';
 
 /** Match portfolio pixel-nav timing (jatinkumar.tech). */
 export const PIXEL_COVER_DURATION_S = 0.15;
 export const PIXEL_REVEAL_DURATION_S = 0.14;
 export const PIXEL_STAGGER_COVER_S = 0.32;
 export const PIXEL_STAGGER_REVEAL_S = 0.3;
+export const PIXEL_STAGGER_COVER_MOBILE_S = 0.24;
+export const PIXEL_STAGGER_REVEAL_MOBILE_S = 0.22;
 
 const FIREFOX_STAGGER_SCALE = 0.85;
 
@@ -15,12 +17,18 @@ function isFirefox() {
 
 export function shouldUsePixelTransition() {
   if (typeof window === 'undefined') return false;
-  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return false;
-  return window.innerWidth >= BREAKPOINT_TABLET;
+  return !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 }
 
 export function getPixelTransitionStagger(cover) {
-  const base = cover ? PIXEL_STAGGER_COVER_S : PIXEL_STAGGER_REVEAL_S;
+  const mobile = isMobileViewport();
+  const base = cover
+    ? mobile
+      ? PIXEL_STAGGER_COVER_MOBILE_S
+      : PIXEL_STAGGER_COVER_S
+    : mobile
+      ? PIXEL_STAGGER_REVEAL_MOBILE_S
+      : PIXEL_STAGGER_REVEAL_S;
   return isFirefox() ? base * FIREFOX_STAGGER_SCALE : base;
 }
 
