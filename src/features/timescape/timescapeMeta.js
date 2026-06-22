@@ -3,7 +3,7 @@ export const MONUMENT = {
   location: 'Makartplatz, Salzburg, Austria',
 };
 
-/** Discrete timeline stops — present → past (left to right). */
+/** Discrete timeline stops, chronological — past → present (left to right). */
 export const TIMELINE_ERAS = [
   {
     id: 'era1994',
@@ -48,7 +48,10 @@ export const TIMELINE_ERAS = [
     label: 'Twin houses',
     description: 'The building was first mentioned in historical records in 1617.',
   },
-];
+  // Authored newest → oldest above; reversed here so the timeline reads
+  // oldest → newest (left → right). Geometry buffers in monumentData.js are
+  // reversed in lockstep to keep era indices aligned.
+].reverse();
 
 /** Shared morph duration — canvas + timeline track stay in sync. */
 export const MORPH_DURATION_MS = 1800;

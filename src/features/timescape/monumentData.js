@@ -703,16 +703,18 @@ function flattenEraColors(key) {
   return colors;
 }
 
+// NOTE: authored newest → oldest (matching ERA_KEYS); reversed below to align
+// with TIMELINE_ERAS, which the timeline renders oldest → newest (left → right).
 export const ERA_COLORS = [
   [0.96, 0.84, 0.78],
   [0.78, 0.74, 0.66],
   [0.48, 0.42, 0.38],
   [0.78, 0.72, 0.64],
   [0.74, 0.68, 0.62],
-];
+].reverse();
 
-export const ERA_POSITIONS = ERA_KEYS.map((key) => flattenEraPositions(key));
-export const ERA_VERTEX_COLORS = ERA_KEYS.map((key) => flattenEraColors(key));
+export const ERA_POSITIONS = ERA_KEYS.map((key) => flattenEraPositions(key)).reverse();
+export const ERA_VERTEX_COLORS = ERA_KEYS.map((key) => flattenEraColors(key)).reverse();
 export const ERA_POINT_COLORS = ERA_VERTEX_COLORS;
 export const ERA_COLOR_BUFFERS = ERA_VERTEX_COLORS;
 export const POINT_COUNT = POINT_SLOTS.length;

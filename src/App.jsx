@@ -5,7 +5,8 @@ import { MONUMENT, TIMELINE_ERAS, MORPH_DURATION_MS } from '@/features/timescape
 
 const TimescapeCanvas = lazy(() => import('@/features/timescape/TimescapeCanvas'));
 
-const PRESENT_ERA_INDEX = 0;
+// Timeline reads oldest → newest, so the present day sits at the last stop.
+const PRESENT_ERA_INDEX = TIMELINE_ERAS.length - 1;
 
 export default function App() {
   const [activeIndex, setActiveIndex] = useState(PRESENT_ERA_INDEX);
