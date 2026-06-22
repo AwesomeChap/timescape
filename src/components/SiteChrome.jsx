@@ -1,4 +1,5 @@
 import React from 'react';
+import ThemeToggle from '@/components/ThemeToggle';
 
 export default function SiteChrome() {
   return (
@@ -14,6 +15,9 @@ export default function SiteChrome() {
           alt="Jatin Kumar"
         />
       </a>
+      <div className="site-chrome__controls">
+        <ThemeToggle />
+      </div>
     </header>
   );
 }

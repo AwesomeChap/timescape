@@ -3,6 +3,21 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <script>
+      // Set the theme before first paint to avoid a flash of the wrong theme.
+      // Key + fallback MUST match getInitialTheme() in src/shared/theme/ThemeContext.jsx.
+      (function () {
+        try {
+          var t = localStorage.getItem('timescape-theme');
+          document.documentElement.setAttribute(
+            'data-theme',
+            t === 'light' || t === 'dark' ? t : 'dark'
+          );
+        } catch (e) {
+          document.documentElement.setAttribute('data-theme', 'dark');
+        }
+      })();
+    </script>
     <meta
       name="description"
       content="Timescape — morph Salzburg Cathedral through time with an interactive point-cloud timeline."

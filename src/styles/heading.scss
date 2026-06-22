@@ -16,7 +16,7 @@
     line-height: 1.4;
     letter-spacing: 0.16em;
     text-transform: uppercase;
-    color: rgba(255, 214, 224, 0.64);
+    color: rgba(var(--eyebrow-rgb), 0.64);
   }
 
   .heading-stack__title {
@@ -27,7 +27,7 @@
     line-height: 1.04;
     letter-spacing: 0.04em;
     text-transform: uppercase;
-    color: rgba(221, 221, 221, 0.9);
+    color: rgba(var(--text-rgb), 0.9);
     text-wrap: balance;
   }
 }

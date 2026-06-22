@@ -3,6 +3,7 @@
 @use 'layout';
 @use 'chrome';
 @use 'timescape';
+@use 'map';
 
 :root {
   --pixel-mesh-gap: 3px;
@@ -13,7 +14,58 @@
   --page-body-font-size: 14px;
   --page-body-line-height: 1.72;
   --page-body-letter-spacing: -0.01em;
-  --page-body-color: rgba(221, 221, 221, 0.9);
+
+  /* ── Theme tokens (dark defaults). RGB triples flip the whole alpha ladder. ── */
+  --text-rgb: 221, 221, 221; /* text/border base */
+  --surface-rgb: 10, 10, 10; /* button/panel surface base */
+  --page-rgb: 14, 14, 14; /* page/canvas base (#0e0e0e) */
+  --eyebrow-rgb: 255, 214, 224; /* warm eyebrow tint */
+  --accent-rgb: 255, 13, 45; /* for rgba(255,13,45,·) borders/glows */
+  --accent: #ff0d2d; /* same in both themes */
+  --text-strong: #fff;
+  --page-bg: rgb(var(--page-rgb));
+  --popup-bg: #161616;
+  --zoom-bg: #161616;
+  --zoom-border: #2a2a2a;
+  --zoom-hover-bg: #222;
+  --zoom-hover-text: #fff;
+  --popup-close: #888;
+  --timeline-muted: #3a3a3a;
+  --canvas-border: rgba(255, 255, 255, 0.09);
+  --page-body-color: rgba(var(--text-rgb), 0.9);
+
+  /* pixel-blink mesh tones */
+  --pixel-mesh-base: #0e0e0e;
+  --pixel-tone-0: #0a0a0a;
+  --pixel-tone-1: #0c0c0c;
+  --pixel-tone-2: #0e0e0e;
+  --pixel-tone-3: #101010;
+  --pixel-tone-4: #121212;
+  --pixel-pulse: rgba(255, 255, 255, 0.055);
+}
+
+[data-theme='light'] {
+  --text-rgb: 34, 34, 34;
+  --surface-rgb: 245, 245, 245;
+  --page-rgb: 244, 244, 244;
+  --eyebrow-rgb: 150, 40, 60;
+  --text-strong: #111;
+  --popup-bg: #fff;
+  --zoom-bg: #fff;
+  --zoom-border: #d4d4d4;
+  --zoom-hover-bg: #ececec;
+  --zoom-hover-text: #000;
+  --popup-close: #666;
+  --timeline-muted: #c8c8c8;
+  --canvas-border: rgba(0, 0, 0, 0.12);
+
+  --pixel-mesh-base: #f4f4f4;
+  --pixel-tone-0: #eee;
+  --pixel-tone-1: #f0f0f0;
+  --pixel-tone-2: #f4f4f4;
+  --pixel-tone-3: #f7f7f7;
+  --pixel-tone-4: #fafafa;
+  --pixel-pulse: rgba(0, 0, 0, 0.05);
 }
 
 @include tablet-up {
@@ -54,11 +106,14 @@ body {
 body {
   height: 100%;
   overflow: hidden;
-  background-color: #0e0e0e;
-  color: #ccc;
+  background-color: var(--page-bg);
+  color: rgba(var(--text-rgb), 0.85);
   font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
   font-weight: 300;
   -webkit-font-smoothing: antialiased;
+  transition:
+    background-color 0.25s ease,
+    color 0.25s ease;
 }
 
 #root {
@@ -87,6 +142,6 @@ a {
 
 a:focus-visible,
 button:focus-visible {
-  outline: 2px solid #ff0d2d;
+  outline: 2px solid var(--accent);
   outline-offset: 2px;
 }

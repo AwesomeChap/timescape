@@ -1,8 +1,10 @@
 import React from 'react';
 import { createRoot } from 'react-dom/client';
-import App from './App';
+import 'leaflet/dist/leaflet.css';
+import AppRoot from './AppRoot';
 import PixelBlinkBackground from '@/shared/background/PixelBlinkBackground';
 import SiteChrome from '@/components/SiteChrome';
+import { ThemeProvider } from '@/shared/theme/ThemeContext';
 import './styles/main.scss';
 
 createRoot(document.getElementById('root')).render(
@@ -10,8 +12,10 @@ createRoot(document.getElementById('root')).render(
     <div className="app-shell">
       <PixelBlinkBackground className="pixel-blink-bg--visible" enabled />
       <div className="app-content-layer">
-        <SiteChrome />
-        <App />
+        <ThemeProvider>
+          <SiteChrome />
+          <AppRoot />
+        </ThemeProvider>
       </div>
     </div>
   </React.StrictMode>

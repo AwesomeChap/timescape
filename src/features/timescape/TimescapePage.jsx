@@ -8,7 +8,7 @@ const TimescapeCanvas = lazy(() => import('@/features/timescape/TimescapeCanvas'
 // Timeline reads oldest → newest, so the present day sits at the last stop.
 const PRESENT_ERA_INDEX = TIMELINE_ERAS.length - 1;
 
-export default function App() {
+export default function TimescapePage({ onBackToMap }) {
   const [activeIndex, setActiveIndex] = useState(PRESENT_ERA_INDEX);
   const [morphProgress, setMorphProgress] = useState(1);
   const [fromEraIndex, setFromEraIndex] = useState(PRESENT_ERA_INDEX);
@@ -79,6 +79,15 @@ export default function App() {
         <div className="sub-section timescape-page__hero">
           <div className="timescape-page__copy-column">
             <header className="timescape-page__intro">
+              {onBackToMap && (
+                <button
+                  type="button"
+                  className="timescape-page__back"
+                  onClick={onBackToMap}
+                >
+                  &larr; Back to map
+                </button>
+              )}
               <Heading heading="Timescape" subHeading="Hackathon experiment" />
               <p className="text timescape-page__monument">
                 {MONUMENT.name}

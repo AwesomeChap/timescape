@@ -1,0 +1,150 @@
+@use 'colors' as *;
+@use 'breakpoints' as *;
+
+.map-landing {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  // Clear the fixed 60px SiteChrome header, then frame the map with padding.
+  padding: calc(60px + 5 * var(--pixel-mesh-gap)) calc(6 * var(--pixel-mesh-gap))
+    calc(6 * var(--pixel-mesh-gap));
+
+  @include desktop-up {
+    padding: calc(60px + 6 * var(--pixel-mesh-gap)) var(--desktop-edge-inset)
+      var(--desktop-edge-inset);
+  }
+
+  &__canvas {
+    position: relative;
+    height: 100%;
+    width: 100%;
+    background: var(--page-bg);
+    border: 1px solid var(--canvas-border);
+    border-radius: 10px;
+    overflow: hidden;
+  }
+
+  &__hint {
+    position: absolute;
+    left: 50%;
+    bottom: calc(10 * var(--pixel-mesh-gap));
+    transform: translateX(-50%);
+    z-index: 500;
+    margin: 0;
+    padding: 0.5rem 1rem;
+    border: 1px solid rgba(var(--accent-rgb), 0.4);
+    border-radius: 999px;
+    background: rgba(var(--page-rgb), 0.82);
+    color: rgba(var(--text-rgb), 0.9);
+    font-size: 0.78rem;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    white-space: nowrap;
+    pointer-events: none;
+  }
+
+  // Location-pin markers (inline SVG built via L.divIcon).
+  &__marker {
+    display: block;
+    width: 34px;
+    height: 34px;
+  }
+
+  &__marker-svg {
+    width: 100%;
+    height: 100%;
+    display: block;
+    fill: currentColor; // pin body
+    // Subtle outline so the pin reads on both dark and light tiles.
+    filter: drop-shadow(0 1px 1.5px rgba(0, 0, 0, 0.45));
+  }
+
+  &__marker-glyph {
+    fill: var(--text-strong); // dot / music note inside the pin
+  }
+
+  &__marker--coming-soon {
+    color: #8c8c8c;
+    opacity: 0.9;
+    transition:
+      opacity 0.2s ease,
+      transform 0.2s ease;
+
+    &:hover {
+      opacity: 1;
+      transform: translateY(-2px);
+    }
+  }
+
+  &__marker--available {
+    color: var(--accent);
+    cursor: pointer;
+    filter: drop-shadow(0 0 6px $red-brand);
+    animation: map-landing-pulse 2.2s ease-in-out infinite;
+  }
+
+  &__popup-title {
+    display: block;
+    font-weight: 600;
+    color: var(--text-strong);
+  }
+
+  &__popup-soon {
+    display: block;
+    margin-top: 0.15rem;
+    color: $red-brand;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-size: 0.72rem;
+  }
+}
+
+@keyframes map-landing-pulse {
+  0%,
+  100% {
+    filter: drop-shadow(0 0 4px rgba(255, 13, 45, 0.55));
+  }
+
+  50% {
+    filter: drop-shadow(0 0 11px rgba(255, 13, 45, 0.95));
+  }
+}
+
+// ── Leaflet theme overrides ────────────────────────────────────────────────
+.leaflet-container {
+  background: var(--page-bg);
+  font-family: inherit;
+}
+
+// Lift the very-dark CARTO tiles for more contrast/legibility (dark only —
+// light mode uses standard OSM tiles that need no correction).
+[data-theme='dark'] .map-landing .leaflet-tile-pane {
+  filter: brightness(1.22) contrast(1.14) saturate(1.06);
+}
+
+.leaflet-popup-content-wrapper,
+.leaflet-popup-tip {
+  background: var(--popup-bg);
+  color: rgba(var(--text-rgb), 0.85);
+  border: 1px solid rgba(var(--accent-rgb), 0.4);
+}
+
+.leaflet-popup-content {
+  margin: 0.7rem 0.9rem;
+  line-height: 1.45;
+}
+
+.leaflet-popup-close-button {
+  color: var(--popup-close) !important;
+}
+
+.leaflet-control-zoom a {
+  background: var(--zoom-bg);
+  color: rgba(var(--text-rgb), 0.85);
+  border-color: var(--zoom-border);
+
+  &:hover {
+    background: var(--zoom-hover-bg);
+    color: var(--zoom-hover-text);
+  }
+}
