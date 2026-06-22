@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import L from 'leaflet';
 import { MONUMENTS, MY_POSITION, SALZBURG_CENTER, nearestMonuments } from './monuments';
-import { LOCATION_RESET_ICON_HTML } from './locationResetIcon';
+import currentLocationIcon from './current-location.svg?raw';
 import { useTheme } from '@/shared/theme/ThemeContext';
 
 const TILE_URLS = {
@@ -103,7 +103,7 @@ export default function MapLanding({ onEnterTimescape }) {
       link.setAttribute('role', 'button');
       link.title = 'Reset view';
       link.setAttribute('aria-label', 'Reset map view');
-      link.innerHTML = LOCATION_RESET_ICON_HTML;
+      link.innerHTML = currentLocationIcon;
       L.DomEvent.disableClickPropagation(container);
       L.DomEvent.on(link, 'click', L.DomEvent.stop).on(link, 'click', () => {
         map.setView([SALZBURG_CENTER.lat, SALZBURG_CENTER.lng], SALZBURG_CENTER.zoom);
