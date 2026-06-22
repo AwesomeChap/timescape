@@ -24,23 +24,120 @@
     overflow: hidden;
   }
 
-  &__hint {
+  // Fixed "you are here" blue dot.
+  &__me {
+    position: relative;
+    display: block;
+    width: 18px;
+    height: 18px;
+  }
+
+  &__me-dot {
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    background: #2a7fff;
+    border: 2px solid #fff;
+    box-shadow:
+      0 0 0 1px rgba(42, 127, 255, 0.5),
+      0 1px 4px rgba(0, 0, 0, 0.45);
+
+    &::before {
+      content: '';
+      position: absolute;
+      inset: -3px;
+      border-radius: 50%;
+      background: rgba(42, 127, 255, 0.4);
+      z-index: -1;
+      animation: map-me-pulse 2s ease-out infinite;
+    }
+  }
+
+  // Bottom-centre "nearest sights" control (panel opens upward).
+  &__nearest {
     position: absolute;
     left: 50%;
     bottom: calc(10 * var(--pixel-mesh-gap));
     transform: translateX(-50%);
     z-index: 500;
+    display: flex;
+    flex-direction: column-reverse;
+    align-items: center;
+    gap: calc(2 * var(--pixel-mesh-gap));
+    pointer-events: auto;
+  }
+
+  &__nearest-btn {
     margin: 0;
-    padding: 0.5rem 1rem;
+    padding: 0.45rem 0.85rem;
     border: 1px solid rgba(var(--accent-rgb), 0.4);
     border-radius: 999px;
-    background: rgba(var(--page-rgb), 0.82);
+    background: rgba(var(--page-rgb), 0.85);
     color: rgba(var(--text-rgb), 0.9);
-    font-size: 0.78rem;
-    letter-spacing: 0.04em;
+    font-size: 0.72rem;
+    letter-spacing: 0.08em;
     text-transform: uppercase;
-    white-space: nowrap;
-    pointer-events: none;
+    cursor: pointer;
+    backdrop-filter: blur(6px);
+    transition:
+      background 0.2s ease,
+      border-color 0.2s ease;
+
+    &:hover {
+      border-color: rgba(var(--accent-rgb), 0.7);
+    }
+  }
+
+  &__nearest-panel {
+    display: flex;
+    flex-direction: column;
+    margin: 0;
+    padding: 0.35rem;
+    width: max-content;
+    max-width: 240px;
+    border: 1px solid rgba(var(--text-rgb), 0.14);
+    border-radius: 10px;
+    background: rgba(var(--page-rgb), 0.92);
+    backdrop-filter: blur(6px);
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.35);
+  }
+
+  &__nearest-item {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 0.9rem;
+    width: 100%;
+    margin: 0;
+    padding: 0.4rem 0.55rem;
+    border: 0;
+    border-radius: 6px;
+    background: transparent;
+    font: inherit;
+    text-align: left;
+    cursor: pointer;
+    transition: background 0.15s ease;
+
+    &:hover,
+    &:focus-visible {
+      background: rgba(var(--text-rgb), 0.08);
+    }
+
+    & + & {
+      border-top: 1px solid rgba(var(--text-rgb), 0.08);
+    }
+  }
+
+  &__nearest-name {
+    color: rgba(var(--text-rgb), 0.92);
+    font-size: 0.8rem;
+  }
+
+  &__nearest-dist {
+    flex-shrink: 0;
+    color: var(--accent);
+    font-size: 0.72rem;
+    font-variant-numeric: tabular-nums;
   }
 
   // Location-pin markers (inline SVG built via L.divIcon).
@@ -110,6 +207,18 @@
   }
 }
 
+@keyframes map-me-pulse {
+  0% {
+    transform: scale(1);
+    opacity: 0.6;
+  }
+
+  100% {
+    transform: scale(2.6);
+    opacity: 0;
+  }
+}
+
 // ── Leaflet theme overrides ────────────────────────────────────────────────
 .leaflet-container {
   background: var(--page-bg);
@@ -138,7 +247,8 @@
   color: var(--popup-close) !important;
 }
 
-.leaflet-control-zoom a {
+.leaflet-control-zoom a,
+.map-landing__reset a {
   background: var(--zoom-bg);
   color: rgba(var(--text-rgb), 0.85);
   border-color: var(--zoom-border);
@@ -147,4 +257,16 @@
     background: var(--zoom-hover-bg);
     color: var(--zoom-hover-text);
   }
+}
+
+.map-landing__reset a {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.map-landing__reset-icon {
+  width: 15px;
+  height: 15px;
+  fill: currentColor;
 }
